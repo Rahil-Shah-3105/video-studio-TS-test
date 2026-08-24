@@ -1,3 +1,4 @@
+const logger = console;
 import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { toBlobURL, fetchFile } from '@ffmpeg/util';
 import {
@@ -78,19 +79,23 @@ export async function loadFFmpeg(
  * Write a file to FFmpeg's virtual filesystem (MEMFS)
  */
 export async function writeFSFile(ffmpeg: FFmpeg, name: string, file: File | Blob) {
+logger.debug(`>>> Entering writeFSFile(ffmpeg=${ffmpeg},name=${name},file=${file})`);
   const data = await fetchFile(file);
   await ffmpeg.writeFile(name, data);
+logger.debug(`writeFSFile(ffmpeg=${ffmpeg},name=${name},file=${file}): data → ${data}`);
 }
 
 /**
  * Clean up files in FFmpeg filesystem
  */
 export async function cleanFSFiles(ffmpeg: FFmpeg, names: string[]) {
+logger.debug(`>>> Entering cleanFSFiles(ffmpeg=${ffmpeg},names=${names})`);
   for (const name of names) {
     try {
       await ffmpeg.deleteFile(name);
     } catch (e) {
       console.warn(`Failed to delete file: ${name}`, e);
+	logger.debug(`<<< Exiting cleanFSFiles(ffmpeg=${ffmpeg},names=${names})`);
     }
   }
 }
@@ -99,8 +104,10 @@ export async function cleanFSFiles(ffmpeg: FFmpeg, names: string[]) {
  * Run standard FFmpeg execution command
  */
 export async function executeCommand(ffmpeg: FFmpeg, args: string[]): Promise<void> {
+logger.debug(`>>> Entering executeCommand(ffmpeg=${ffmpeg},args=${args})`);
   console.log('Executing FFmpeg arguments:', args.join(' '));
   await ffmpeg.exec(args);
+logger.debug(`<<< Exiting executeCommand(ffmpeg=${ffmpeg},args=${args})`);
 }
 
 /**
@@ -109,10 +116,14 @@ export async function executeCommand(ffmpeg: FFmpeg, args: string[]): Promise<vo
 export function buildSpeedFilter(speed: number): string {
   // Video filter: setpts
   const vFilter = `setpts=${(1 / speed).toFixed(3)}*PTS`;
+logger.debug(`buildSpeedFilter(speed=${speed}): vFilter → ${vFilter}`);
   
   // Audio filter: atempo (supports 0.5 to 2.0). Chain if out of bounds.
   let aFilter = '';
+logger.debug(`buildSpeedFilter(speed=${speed}): aFilter → ${aFilter}`);
   if (speed >= 0.5 && speed <= 2.0) {
+	logger.debug(`>>> Entering buildSpeedFilter(speed=${speed})`);
+	logger.debug(`<<< Exiting buildSpeedFilter(speed=${speed})`);
     aFilter = `atempo=${speed.toFixed(2)}`;
   } else if (speed > 2.0) {
     // E.g. speed = 4.0: atempo=2.0,atempo=2.0
@@ -147,6 +158,8 @@ export function buildVideoFilters(filters: FilterSettings): string {
 
   // Hue (grayscale/sepia/saturation)
   if (filters.grayscale) {
+	logger.debug(`>>> Entering buildVideoFilters(filters=${filters})`);
+	logger.debug(`<<< Exiting buildVideoFilters(filters=${filters})`);
     parts.push('hue=s=0');
   } else if (filters.saturation !== 1) {
     parts.push(`hue=s=${filters.saturation.toFixed(2)}`);

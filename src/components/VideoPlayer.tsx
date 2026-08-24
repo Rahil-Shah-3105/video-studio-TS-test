@@ -1,4 +1,5 @@
 import React from 'react';
+const logger = console;
 import { FileVideo, Download, Sparkles } from 'lucide-react';
 import { WatermarkSettings } from '../types';
 
@@ -16,18 +17,24 @@ interface VideoPlayerProps {
 }
 
 export const formatDuration = (seconds: number | undefined): string => {
+logger.debug(`>>> Entering formatDuration(seconds=${seconds})`);
   if (seconds === undefined || isNaN(seconds)) return '00:00';
   const mins = Math.floor(seconds / 60);
+logger.debug(`formatDuration(seconds=${seconds}): mins → ${mins}`);
   const secs = Math.floor(seconds % 60);
+logger.debug(`formatDuration(seconds=${seconds}): secs → ${secs}`);
   return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
 };
 
 export const formatBytes = (bytes: number | undefined): string => {
+logger.debug(`>>> Entering formatBytes(bytes=${bytes})`);
   if (bytes === undefined || isNaN(bytes)) return '0 B';
   if (bytes === 0) return '0 B';
   const k = 1024;
   const sizes = ['B', 'KB', 'MB', 'GB'];
+logger.debug(`formatBytes(bytes=${bytes}): sizes → ${sizes}`);
   const i = Math.floor(Math.log(bytes) / Math.log(k));
+logger.debug(`<<< Exiting formatBytes(bytes=${bytes})`);
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 };
 
@@ -44,6 +51,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
   onWatermarkChange,
 }) => {
   const handleMouseDown = (e: React.MouseEvent) => {
+	logger.debug(`>>> Entering handleMouseDown(e=${e})`);
     if (!onWatermarkChange || !watermark || watermark.type === 'none') return;
     
     e.preventDefault();
@@ -52,12 +60,14 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
     if (!container) return;
 
     const rect = container.getBoundingClientRect();
+	logger.debug(`handleMouseDown(e=${e}): rect → ${rect}`);
 
     // Automatically transition to custom positioning if user starts dragging a preset
     if (watermark.position !== 'custom') {
       // Calculate starting percent coordinates based on preset positions
       let startX = 50;
       let startY = 50;
+	logger.debug(`<<< Exiting handleMouseDown(e=${e})`);
       if (watermark.position === 'topLeft') { startX = 15; startY = 15; }
       else if (watermark.position === 'topRight') { startX = 85; startY = 15; }
       else if (watermark.position === 'bottomLeft') { startX = 15; startY = 85; }
@@ -72,11 +82,15 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
     }
 
     const handleMouseMove = (moveEvent: MouseEvent) => {
+	logger.debug(`>>> Entering handleMouseMove(moveEvent=${moveEvent})`);
       const x = ((moveEvent.clientX - rect.left) / rect.width) * 100;
       const y = ((moveEvent.clientY - rect.top) / rect.height) * 100;
+	logger.debug(`handleMouseMove(moveEvent=${moveEvent}): x → ${x}`);
+	logger.debug(`handleMouseMove(moveEvent=${moveEvent}): y → ${y}`);
 
       // Clamp between 0 and 100
       const clampedX = Math.max(2, Math.min(98, x));
+	logger.debug(`<<< Exiting handleMouseMove(moveEvent=${moveEvent})`);
       const clampedY = Math.max(2, Math.min(98, y));
 
       onWatermarkChange({
@@ -88,8 +102,10 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
     };
 
     const handleMouseUp = () => {
+	logger.debug('>>> Entering handleMouseUp()');
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
+	logger.debug('<<< Exiting handleMouseUp()');
     };
 
     document.addEventListener('mousemove', handleMouseMove);
@@ -98,6 +114,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
 
   // Determine styles for watermark positioning
   const getWatermarkPositionStyle = (): React.CSSProperties => {
+	logger.debug('>>> Entering getWatermarkPositionStyle()');
     if (!watermark) return {};
 
     const baseStyle: React.CSSProperties = {
@@ -130,6 +147,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
       case 'center':
         return { ...baseStyle, left: '50%', top: '50%', transform: 'translate(-50%, -50%)' };
       default:
+		logger.debug('<<< Exiting getWatermarkPositionStyle()');
         return baseStyle;
     }
   };
@@ -219,4 +237,5 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
       </div>
     </div>
   );
+logger.debug(`<<< Exiting VideoPlayer(url=${url},name=${name},size=${size},duration=${duration},width=${width},height=${height},title=${title},isOutput=${isOutput},watermark=${watermark},onWatermarkChange=${onWatermarkChange})`);
 };

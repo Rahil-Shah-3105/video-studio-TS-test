@@ -1,4 +1,5 @@
 import React from 'react';
+const logger = console;
 import { Scissors, Clock } from 'lucide-react';
 import { formatDuration } from './VideoPlayer';
 
@@ -10,26 +11,36 @@ interface TimelineProps {
 }
 
 export const Timeline: React.FC<TimelineProps> = ({ duration, start, end, onChange }) => {
+logger.debug(`>>> Entering Timeline(duration=${duration},start=${start},end=${end},onChange=${onChange})`);
   const handleStartChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+	logger.debug(`>>> Entering handleStartChange(e=${e})`);
     const value = Math.max(0, Math.min(parseFloat(e.target.value), end - 0.1));
     onChange(value, end);
+	logger.debug(`handleStartChange(e=${e}): value → ${value}`);
   };
 
   const handleEndChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+	logger.debug(`>>> Entering handleEndChange(e=${e})`);
     const value = Math.max(start + 0.1, Math.min(parseFloat(e.target.value), duration));
     onChange(start, value);
+	logger.debug(`handleEndChange(e=${e}): value → ${value}`);
   };
 
   const setPreset = (percentStart: number, percentEnd: number) => {
+	logger.debug(`>>> Entering setPreset(percentStart=${percentStart},percentEnd=${percentEnd})`);
     const s = duration * percentStart;
     const e = duration * percentEnd;
     onChange(s, e);
+	logger.debug(`<<< Exiting setPreset(percentStart=${percentStart},percentEnd=${percentEnd})`);
   };
 
   // Calculate percentages for CSS custom positioning
   const leftPercent = (start / duration) * 100;
+logger.debug(`Timeline(duration=${duration},start=${start},end=${end},onChange=${onChange}): leftPercent → ${leftPercent}`);
   const rightPercent = 100 - (end / duration) * 100;
+logger.debug(`Timeline(duration=${duration},start=${start},end=${end},onChange=${onChange}): rightPercent → ${rightPercent}`);
 
+logger.debug(`<<< Exiting Timeline(duration=${duration},start=${start},end=${end},onChange=${onChange})`);
   return (
     <div className="timeline-component">
       <div className="timeline-title-wrapper">

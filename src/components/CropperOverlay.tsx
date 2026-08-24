@@ -1,4 +1,5 @@
 import React from 'react';
+const logger = console;
 import { Crop, Maximize } from 'lucide-react';
 import { CropSettings } from '../types';
 
@@ -15,6 +16,7 @@ export const CropperOverlay: React.FC<CropperOverlayProps> = ({
   videoWidth,
   videoHeight,
 }) => {
+logger.debug(`>>> Entering CropperOverlay(settings=${settings},onChange=${onChange},videoWidth=${videoWidth},videoHeight=${videoHeight})`);
   // Preset ratios: [label, width_ratio, height_ratio]
   const presets: [string, number, number | null][] = [
     ['Square (1:1)', 1, 1],
@@ -25,6 +27,7 @@ export const CropperOverlay: React.FC<CropperOverlayProps> = ({
   ];
 
   const applyPresetRatio = (rw: number, rh: number | null) => {
+	logger.debug(`>>> Entering applyPresetRatio(rw=${rw},rh=${rh})`);
     if (!rh || rw === 0) {
       onChange({ x: 0, y: 0, width: 100, height: 100 });
       return;
@@ -34,9 +37,12 @@ export const CropperOverlay: React.FC<CropperOverlayProps> = ({
     const targetAspect = rw / rh;
 
     let w = 100;
+	logger.debug(`applyPresetRatio(rw=${rw},rh=${rh}): w → ${w}`);
     let h = 100;
     let x = 0;
+	logger.debug(`applyPresetRatio(rw=${rw},rh=${rh}): x → ${x}`);
     let y = 0;
+	logger.debug(`applyPresetRatio(rw=${rw},rh=${rh}): y → ${y}`);
 
     if (currentAspect > targetAspect) {
       // Current video is wider than target aspect ratio.
@@ -48,6 +54,7 @@ export const CropperOverlay: React.FC<CropperOverlayProps> = ({
       // Width should be full, height is shorter.
       h = (currentAspect / targetAspect) * 100;
       y = (100 - h) / 2;
+	logger.debug(`applyPresetRatio(rw=${rw},rh=${rh}): h → ${h}`);
     }
 
     onChange({
@@ -59,6 +66,7 @@ export const CropperOverlay: React.FC<CropperOverlayProps> = ({
   };
 
   const handleSliderChange = (key: keyof CropSettings, val: number) => {
+	logger.debug(`>>> Entering handleSliderChange(key=${key},val=${val})`);
     const nextSettings = { ...settings, [key]: val };
     
     // Bounds check
@@ -68,22 +76,30 @@ export const CropperOverlay: React.FC<CropperOverlayProps> = ({
       }
     }
     if (key === 'y') {
+	logger.debug(`CropperOverlay(settings=${settings},onChange=${onChange},videoWidth=${videoWidth},videoHeight=${videoHeight}): nextSettings.width → ${nextSettings.width}`);
       if (nextSettings.y + nextSettings.height > 100) {
+		logger.debug(`handleSliderChange(key=${key},val=${val}): nextSettings.width → ${nextSettings.width}`);
         nextSettings.height = 100 - nextSettings.y;
       }
     }
     if (key === 'width') {
+	logger.debug(`CropperOverlay(settings=${settings},onChange=${onChange},videoWidth=${videoWidth},videoHeight=${videoHeight}): nextSettings.height → ${nextSettings.height}`);
       if (nextSettings.x + nextSettings.width > 100) {
+		logger.debug(`handleSliderChange(key=${key},val=${val}): nextSettings.height → ${nextSettings.height}`);
         nextSettings.x = 100 - nextSettings.width;
       }
     }
     if (key === 'height') {
+	logger.debug(`CropperOverlay(settings=${settings},onChange=${onChange},videoWidth=${videoWidth},videoHeight=${videoHeight}): nextSettings.x → ${nextSettings.x}`);
       if (nextSettings.y + nextSettings.height > 100) {
+		logger.debug(`handleSliderChange(key=${key},val=${val}): nextSettings.x → ${nextSettings.x}`);
         nextSettings.y = 100 - nextSettings.height;
       }
     }
 
+	logger.debug(`CropperOverlay(settings=${settings},onChange=${onChange},videoWidth=${videoWidth},videoHeight=${videoHeight}): nextSettings.y → ${nextSettings.y}`);
     onChange(nextSettings);
+	logger.debug(`<<< Exiting handleSliderChange(key=${key},val=${val})`);
   };
 
   return (
@@ -185,4 +201,5 @@ export const CropperOverlay: React.FC<CropperOverlayProps> = ({
       </div>
     </div>
   );
+logger.debug(`<<< Exiting CropperOverlay(settings=${settings},onChange=${onChange},videoWidth=${videoWidth},videoHeight=${videoHeight})`);
 };
