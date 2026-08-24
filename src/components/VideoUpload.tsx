@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+const logger = console;
 import { Upload, Video, AlertCircle } from 'lucide-react';
 import { VideoFile } from '../types';
 
@@ -8,11 +9,15 @@ interface VideoUploadProps {
 }
 
 export const VideoUpload: React.FC<VideoUploadProps> = ({ onUpload, multiple = false }) => {
+logger.debug(`>>> Entering VideoUpload(onUpload=${onUpload},multiple=${multiple})`);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDragOver, setIsDragOver] = useState(false);
+logger.debug(`VideoUpload(onUpload=${onUpload},multiple=${multiple}): fileInputRef → ${fileInputRef}`);
   const [error, setError] = useState<string | null>(null);
 
   const extractMetadata = (file: File): Promise<{ duration: number; width: number; height: number }> => {
+	logger.debug(`>>> Entering extractMetadata(file=${file})`);
+	logger.debug(`<<< Exiting extractMetadata(file=${file})`);
     return new Promise((resolve) => {
       const video = document.createElement('video');
       video.preload = 'metadata';
@@ -36,11 +41,13 @@ export const VideoUpload: React.FC<VideoUploadProps> = ({ onUpload, multiple = f
   };
 
   const processFiles = async (fileList: FileList | null) => {
+	logger.debug(`>>> Entering processFiles(fileList=${fileList})`);
     if (!fileList) return;
     setError(null);
 
     const validFiles: VideoFile[] = [];
     const filesArray = Array.from(fileList);
+	logger.debug(`processFiles(fileList=${fileList}): filesArray → ${filesArray}`);
 
     for (const file of filesArray) {
       if (!file.type.startsWith('video/')) {
@@ -61,35 +68,47 @@ export const VideoUpload: React.FC<VideoUploadProps> = ({ onUpload, multiple = f
         height: meta.height,
       });
 
+	logger.debug(`processFiles(fileList=${fileList}): meta → ${meta}`);
       if (!multiple) break; // If single upload, stop at first video
     }
 
     if (validFiles.length > 0) {
       onUpload(validFiles);
+	logger.debug(`<<< Exiting processFiles(fileList=${fileList})`);
     }
   };
 
   const handleDragOver = (e: React.DragEvent) => {
+	logger.debug(`>>> Entering handleDragOver(e=${e})`);
     e.preventDefault();
     setIsDragOver(true);
+	logger.debug(`<<< Exiting handleDragOver(e=${e})`);
   };
 
   const handleDragLeave = () => {
+	logger.debug('>>> Entering handleDragLeave()');
     setIsDragOver(false);
+	logger.debug('<<< Exiting handleDragLeave()');
   };
 
   const handleDrop = async (e: React.DragEvent) => {
+	logger.debug(`>>> Entering handleDrop(e=${e})`);
     e.preventDefault();
     setIsDragOver(false);
     await processFiles(e.dataTransfer.files);
+	logger.debug(`<<< Exiting handleDrop(e=${e})`);
   };
 
   const handleClick = () => {
+	logger.debug('>>> Entering handleClick()');
     fileInputRef.current?.click();
+	logger.debug('<<< Exiting handleClick()');
   };
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+	logger.debug(`>>> Entering handleFileChange(e=${e})`);
     await processFiles(e.target.files);
+	logger.debug(`<<< Exiting handleFileChange(e=${e})`);
   };
 
   return (
@@ -131,4 +150,5 @@ export const VideoUpload: React.FC<VideoUploadProps> = ({ onUpload, multiple = f
       )}
     </div>
   );
+logger.debug(`<<< Exiting VideoUpload(onUpload=${onUpload},multiple=${multiple})`);
 };
