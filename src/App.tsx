@@ -53,6 +53,7 @@ import {
   Info,
 } from 'lucide-react';
 import './App.css';
+const logger = console;
 
 // Default Configurations
 const DEFAULT_TRIM = (): TrimSettings => ({ start: 0, end: 10 });
@@ -106,6 +107,7 @@ interface Toast {
 }
 
 function App() {
+logger.debug('>>> Entering App()');
   const [ffmpeg, setFfmpeg] = useState<FFmpeg | null>(null);
   const [engineStatus, setEngineStatus] = useState<'idle' | 'loading' | 'ready'>('idle');
   const [activeOperation, setActiveOperation] = useState<VideoOperation>('trim');
@@ -145,6 +147,7 @@ function App() {
   });
 
   const uploadInputRef = useRef<HTMLInputElement>(null);
+logger.debug(`App(): uploadInputRef → ${uploadInputRef}`);
 
   // Sync data-theme attribute with state
   useEffect(() => {
@@ -154,6 +157,7 @@ function App() {
   // Initialize FFmpeg WASM Core
   useEffect(() => {
     const initFFmpeg = async () => {
+	logger.debug('>>> Entering initFFmpeg()');
       setEngineStatus('loading');
       try {
         const instance = await loadFFmpeg(
@@ -166,6 +170,7 @@ function App() {
         console.error('FFmpeg loading failed', e);
         showToast('Failed to compile client-side WebAssembly engine.', 'error');
         setEngineStatus('idle');
+		logger.debug('<<< Exiting initFFmpeg()');
       }
     };
     initFFmpeg();
@@ -190,23 +195,29 @@ function App() {
   }, [files]);
 
   const showToast = (message: string, type: Toast['type'] = 'info') => {
+	logger.debug(`>>> Entering showToast(message=${message},type=${type})`);
     const id = Math.random().toString(36).substring(2, 9);
     setToasts((prev) => [...prev, { id, message, type }]);
+	logger.debug(`showToast(message=${message},type=${type}): id → ${id}`);
     
     // Auto remove toast after 3.5s
     setTimeout(() => {
       setToasts((prev) => prev.filter((t) => t.id !== id));
     }, 3500);
+	logger.debug(`<<< Exiting showToast(message=${message},type=${type})`);
   };
 
   const setProgress = (p: number) => {
+	logger.debug(`>>> Entering setProgress(p=${p})`);
     setProcessingState((prev) => ({
       ...prev,
       progress: Math.round(p),
     }));
+	logger.debug(`<<< Exiting setProgress(p=${p})`);
   };
 
   const handleUpload = (newFiles: VideoFile[]) => {
+	logger.debug(`>>> Entering handleUpload(newFiles=${newFiles})`);
     if (activeOperation !== 'merge') {
       files.forEach((f) => URL.revokeObjectURL(f.url));
       setFiles(newFiles);
@@ -217,6 +228,7 @@ function App() {
       setProcessingState((prev) => ({ ...prev, outputUrl: null, outputName: null }));
     } else {
       setFiles((prev) => [...prev, ...newFiles]);
+	logger.debug(`<<< Exiting handleUpload(newFiles=${newFiles})`);
     }
   };
 
@@ -226,14 +238,18 @@ function App() {
       URL.revokeObjectURL(item.url);
     }
     setFiles((prev) => prev.filter((f) => f.id !== id));
+	logger.debug(`handleRemoveMergeItem(id=${id}): item → ${item}`);
   };
 
   const handleReorderMergeItems = (reordered: VideoFile[]) => {
+	logger.debug(`>>> Entering handleReorderMergeItems(reordered=${reordered})`);
     setFiles(reordered);
+	logger.debug(`<<< Exiting handleReorderMergeItems(reordered=${reordered})`);
   };
 
   // Compile and run FFmpeg operations client-side
   const handleRunOperation = async () => {
+	logger.debug('>>> Entering handleRunOperation()');
     if (!ffmpeg) return;
     if (files.length === 0) return;
 
@@ -246,6 +262,7 @@ function App() {
       outputName: null,
     }));
 
+	const _start_handleRunOperation = Date.now();
     showToast('Initiating compilation. Please keep tab open.', 'info');
 
     if (processingState.outputUrl) {
@@ -254,7 +271,9 @@ function App() {
 
     const fileListWritten: string[] = [];
     let outputFileName = 'output.mp4';
+	logger.debug(`handleRunOperation(): outputFileName → ${outputFileName}`);
     let outputMime = 'video/mp4';
+	logger.debug(`handleRunOperation(): outputMime → ${outputMime}`);
     let args: string[] = [];
 
     try {
@@ -298,6 +317,7 @@ function App() {
           const inputs: string[] = [];
           let filterComplex = '';
           for (let i = 0; i < files.length; i++) {
+			logger.debug(`handleRunOperation(): filterComplex → ${filterComplex}`);
             inputs.push('-i', `input_${i}.mp4`);
             filterComplex += `[${i}:v]scale=${w}:${h}:force_original_aspect_ratio=decrease,pad=${w}:${h}:(ow-iw)/2:(oh-ih)/2,setsar=1[v${i}];`;
           }
@@ -368,6 +388,8 @@ function App() {
           if (scale.fitMode === 'stretch') {
             vf = `scale=${targetW}:${targetH}`;
           } else if (scale.fitMode === 'fit') {
+			logger.debug(`handleRunOperation(): targetW → ${targetW}`);
+			logger.debug(`handleRunOperation(): targetH → ${targetH}`);
             vf = `scale=${targetW}:${targetH}:force_original_aspect_ratio=decrease,pad=${targetW}:${targetH}:(ow-iw)/2:(oh-ih)/2`;
           } else {
             vf = `scale=${targetW}:${targetH}:force_original_aspect_ratio=increase,crop=${targetW}:${targetH}`;
@@ -425,6 +447,7 @@ function App() {
             fileListWritten.push('audio.mp3');
 
             const filterGraph = `[0:a]volume=${audio.videoVolume.toFixed(2)}[a1];[1:a]volume=${audio.audioVolume.toFixed(2)}[a2];[a1][a2]amix=inputs=2:duration=first[a]`;
+			logger.debug(`handleRunOperation(): filterGraph → ${filterGraph}`);
             args = [
               '-i', 'input_0.mp4',
               '-i', 'audio.mp3',
@@ -496,8 +519,12 @@ function App() {
                 'https://raw.githubusercontent.com/google/fonts/main/ofl/roboto/Roboto-Regular.ttf'
               );
               const fontBlob = await fontRes.blob();
+			const _start_App = Date.now();
+			logger.info(`App(): API call took ${Date.now() - _start_App} ms`);
               await writeFSFile(ffmpeg, 'font.ttf', fontBlob);
               fileListWritten.push('font.ttf');
+			logger.debug(`handleRunOperation(): fontBlob → ${fontBlob}`);
+			logger.info(`handleRunOperation(): API call took ${Date.now() - _start_handleRunOperation} ms`);
             } catch (err) {
               console.warn('Failed to load font CDN. Drawing watermark with standard styling fallback.');
             }
@@ -756,6 +783,7 @@ function App() {
   };
 
   const handleResetOperation = () => {
+	logger.debug('>>> Entering handleResetOperation()');
     setTrim(DEFAULT_TRIM());
     setSpeed(DEFAULT_SPEED());
     setCrop(DEFAULT_CROP());
@@ -770,10 +798,13 @@ function App() {
     setTransition(DEFAULT_TRANSITION());
     setChromaKey(DEFAULT_CHROMAKEY());
     setExtract(DEFAULT_EXTRACT());
+	logger.debug('<<< Exiting handleResetOperation()');
   };
 
   const renderActiveWorkspace = () => {
+	logger.debug('>>> Entering renderActiveWorkspace()');
     if (files.length === 0) {
+	logger.debug('<<< Exiting renderActiveWorkspace()');
       return (
         <div className="upload-zone-wrapper">
           <VideoUpload onUpload={handleUpload} multiple={activeOperation === 'merge'} />
@@ -895,6 +926,7 @@ function App() {
   };
 
   const getMenuBadge = (op: VideoOperation) => {
+	logger.debug(`>>> Entering getMenuBadge(op=${op})`);
     switch (op) {
       case 'trim': return <Scissors size={15} className="menu-icon" />;
       case 'merge': return <Film size={15} className="menu-icon" />;
@@ -913,8 +945,10 @@ function App() {
       case 'chromakey': return <Sparkles size={15} className="menu-icon sparkle-icon" />;
       case 'extract': return <Camera size={15} className="menu-icon" />;
     }
+	logger.debug(`<<< Exiting getMenuBadge(op=${op})`);
   };
 
+logger.debug('<<< Exiting App()');
   return (
     <div className="app-wrapper">
       {/* Title Header */}
