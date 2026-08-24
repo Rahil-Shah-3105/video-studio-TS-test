@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+const logger = console;
 import { Trash2, Plus, Film, GripVertical } from 'lucide-react';
 import { VideoFile } from '../types';
 import { formatDuration, formatBytes } from './VideoPlayer';
@@ -16,29 +17,37 @@ export const MergerList: React.FC<MergerListProps> = ({
   onRemove,
   onAddMore,
 }) => {
+logger.debug(`>>> Entering MergerList(files=${files},onReorder=${onReorder},onRemove=${onRemove},onAddMore=${onAddMore})`);
   const [draggedIdx, setDraggedIdx] = useState<number | null>(null);
 
   const handleDragStart = (e: React.DragEvent, index: number) => {
+	logger.debug(`>>> Entering handleDragStart(e=${e},index=${index})`);
     setDraggedIdx(index);
     e.dataTransfer.effectAllowed = 'move';
     
     // Create ghost image or class effect
     const target = e.currentTarget as HTMLElement;
     target.classList.add('is-dragging');
+	logger.debug(`<<< Exiting handleDragStart(e=${e},index=${index})`);
   };
 
   const handleDragEnd = (e: React.DragEvent) => {
+	logger.debug(`>>> Entering handleDragEnd(e=${e})`);
     const target = e.currentTarget as HTMLElement;
     target.classList.remove('is-dragging');
     setDraggedIdx(null);
+	logger.debug(`<<< Exiting handleDragEnd(e=${e})`);
   };
 
   const handleDragOver = (e: React.DragEvent, index: number) => {
+	logger.debug(`>>> Entering handleDragOver(e=${e},index=${index})`);
     e.preventDefault();
     if (draggedIdx === null || draggedIdx === index) return;
+	logger.debug(`<<< Exiting handleDragOver(e=${e},index=${index})`);
   };
 
   const handleDrop = (e: React.DragEvent, index: number) => {
+	logger.debug(`>>> Entering handleDrop(e=${e},index=${index})`);
     e.preventDefault();
     if (draggedIdx === null || draggedIdx === index) return;
 
@@ -50,10 +59,13 @@ export const MergerList: React.FC<MergerListProps> = ({
     nextFiles.splice(index, 0, itemToMove);
 
     onReorder(nextFiles);
+	logger.debug(`<<< Exiting handleDrop(e=${e},index=${index})`);
   };
 
   const totalDuration = files.reduce((acc, f) => acc + (f.duration || 0), 0);
+logger.debug(`MergerList(files=${files},onReorder=${onReorder},onRemove=${onRemove},onAddMore=${onAddMore}): totalDuration → ${totalDuration}`);
   const totalSize = files.reduce((acc, f) => acc + (f.size || 0), 0);
+logger.debug(`MergerList(files=${files},onReorder=${onReorder},onRemove=${onRemove},onAddMore=${onAddMore}): totalSize → ${totalSize}`);
 
   return (
     <div className="merger-list-component">
@@ -124,4 +136,5 @@ export const MergerList: React.FC<MergerListProps> = ({
       </div>
     </div>
   );
+logger.debug(`<<< Exiting MergerList(files=${files},onReorder=${onReorder},onRemove=${onRemove},onAddMore=${onAddMore})`);
 };

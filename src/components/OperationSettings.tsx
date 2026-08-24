@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+const logger = console;
 import {
   VideoOperation,
   SpeedSettings,
@@ -73,21 +74,27 @@ const SettingDragDrop: React.FC<SettingDragDropProps> = ({
   onFileLoaded,
   fileName,
 }) => {
+logger.debug(`>>> Entering SettingDragDrop(label=${label},accept=${accept},onFileLoaded=${onFileLoaded},fileName=${fileName})`);
   const [dragOver, setDragOver] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+logger.debug(`SettingDragDrop(label=${label},accept=${accept},onFileLoaded=${onFileLoaded},fileName=${fileName}): inputRef → ${inputRef}`);
 
   const handleDragOver = (e: React.DragEvent) => {
+	logger.debug(`>>> Entering handleDragOver(e=${e})`);
     e.preventDefault();
     setDragOver(true);
+	logger.debug(`<<< Exiting handleDragOver(e=${e})`);
   };
 
   const handleDragLeave = () => setDragOver(false);
 
   const handleDrop = (e: React.DragEvent) => {
+	logger.debug(`>>> Entering handleDrop(e=${e})`);
     e.preventDefault();
     setDragOver(false);
     const file = e.dataTransfer.files?.[0];
     if (file) onFileLoaded(file);
+	logger.debug(`<<< Exiting handleDrop(e=${e})`);
   };
 
   return (
@@ -106,6 +113,7 @@ const SettingDragDrop: React.FC<SettingDragDropProps> = ({
         accept={accept}
         style={{ display: 'none' }}
         onChange={(e) => {
+		logger.debug(`<<< Exiting SettingDragDrop(label=${label},accept=${accept},onFileLoaded=${onFileLoaded},fileName=${fileName})`);
           const file = e.target.files?.[0];
           if (file) onFileLoaded(file);
         }}
@@ -142,6 +150,7 @@ export const OperationSettings: React.FC<OperationSettingsProps> = ({
   setExtract,
   videoDuration = 10,
 }) => {
+logger.debug('>>> Entering OperationSettings()');
   const renderTrimSettings = () => (
     <div className="settings-section">
       <p className="settings-desc">
@@ -159,7 +168,9 @@ export const OperationSettings: React.FC<OperationSettingsProps> = ({
   );
 
   const renderSpeedSettings = () => {
+	logger.debug('>>> Entering renderSpeedSettings()');
     const presets = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 4];
+	logger.debug('<<< Exiting renderSpeedSettings()');
     return (
       <div className="settings-section">
         <div className="setting-header">
@@ -202,11 +213,14 @@ export const OperationSettings: React.FC<OperationSettingsProps> = ({
   );
 
   const renderScaleSettings = () => {
+	logger.debug('>>> Entering renderScaleSettings()');
     const presets: ScaleSettings['preset'][] = ['original', '1080p', '720p', '480p', '16:9', '9:16', '1:1', 'custom'];
 
     const selectPreset = (p: ScaleSettings['preset']) => {
+	logger.debug(`>>> Entering selectPreset(p=${p})`);
       let w = scale.width;
       let h = scale.height;
+	logger.debug(`<<< Exiting selectPreset(p=${p})`);
       if (p === '1080p') { w = 1920; h = 1080; }
       else if (p === '720p') { w = 1280; h = 720; }
       else if (p === '480p') { w = 854; h = 480; }
@@ -217,6 +231,7 @@ export const OperationSettings: React.FC<OperationSettingsProps> = ({
       setScale({ ...scale, preset: p, width: w, height: h });
     };
 
+	logger.debug('<<< Exiting renderScaleSettings()');
     return (
       <div className="settings-section">
         <div className="setting-header">
@@ -276,6 +291,8 @@ export const OperationSettings: React.FC<OperationSettingsProps> = ({
   };
 
   const renderAudioSettings = () => {
+	logger.debug('>>> Entering renderAudioSettings()');
+	logger.debug('<<< Exiting renderAudioSettings()');
     return (
       <div className="settings-section">
         <div className="setting-header">
@@ -352,6 +369,8 @@ export const OperationSettings: React.FC<OperationSettingsProps> = ({
   };
 
   const renderCompressSettings = () => {
+	logger.debug('>>> Entering renderCompressSettings()');
+	logger.debug('<<< Exiting renderCompressSettings()');
     return (
       <div className="settings-section">
         <div className="setting-header">
@@ -399,7 +418,9 @@ export const OperationSettings: React.FC<OperationSettingsProps> = ({
   };
 
   const renderConvertSettings = () => {
+	logger.debug('>>> Entering renderConvertSettings()');
     const formats: ConvertSettings['format'][] = ['mp4', 'webm', 'mkv', 'avi', 'mov'];
+	logger.debug('<<< Exiting renderConvertSettings()');
     return (
       <div className="settings-section">
         <div className="setting-header">
@@ -425,6 +446,8 @@ export const OperationSettings: React.FC<OperationSettingsProps> = ({
   };
 
   const renderWatermarkSettings = () => {
+	logger.debug('>>> Entering renderWatermarkSettings()');
+	logger.debug('<<< Exiting renderWatermarkSettings()');
     return (
       <div className="settings-section">
         <div className="setting-header">
@@ -562,6 +585,8 @@ export const OperationSettings: React.FC<OperationSettingsProps> = ({
   };
 
   const renderRotateSettings = () => {
+	logger.debug('>>> Entering renderRotateSettings()');
+	logger.debug('<<< Exiting renderRotateSettings()');
     return (
       <div className="settings-section">
         <div className="setting-header">
@@ -608,6 +633,8 @@ export const OperationSettings: React.FC<OperationSettingsProps> = ({
   };
 
   const renderFilterSettings = () => {
+	logger.debug('>>> Entering renderFilterSettings()');
+	logger.debug('<<< Exiting renderFilterSettings()');
     return (
       <div className="settings-section">
         <div className="setting-header">
@@ -690,6 +717,8 @@ export const OperationSettings: React.FC<OperationSettingsProps> = ({
   };
 
   const renderGifSettings = () => {
+	logger.debug('>>> Entering renderGifSettings()');
+	logger.debug('<<< Exiting renderGifSettings()');
     return (
       <div className="settings-section">
         <div className="setting-header">
@@ -732,6 +761,8 @@ export const OperationSettings: React.FC<OperationSettingsProps> = ({
 
   // NEW MODERN FEATURES SETTINGS
   const renderReverseSettings = () => {
+	logger.debug('>>> Entering renderReverseSettings()');
+	logger.debug('<<< Exiting renderReverseSettings()');
     return (
       <div className="settings-section">
         <div className="setting-header">
@@ -746,6 +777,8 @@ export const OperationSettings: React.FC<OperationSettingsProps> = ({
   };
 
   const renderTransitionSettings = () => {
+	logger.debug('>>> Entering renderTransitionSettings()');
+	logger.debug('<<< Exiting renderTransitionSettings()');
     return (
       <div className="settings-section">
         <div className="setting-header">
@@ -790,6 +823,8 @@ export const OperationSettings: React.FC<OperationSettingsProps> = ({
   };
 
   const renderChromaKeySettings = () => {
+	logger.debug('>>> Entering renderChromaKeySettings()');
+	logger.debug('<<< Exiting renderChromaKeySettings()');
     return (
       <div className="settings-section">
         <div className="setting-header">
@@ -900,6 +935,8 @@ export const OperationSettings: React.FC<OperationSettingsProps> = ({
   };
 
   const renderExtractSettings = () => {
+	logger.debug('>>> Entering renderExtractSettings()');
+	logger.debug('<<< Exiting renderExtractSettings()');
     return (
       <div className="settings-section">
         <div className="setting-header">
@@ -961,4 +998,5 @@ export const OperationSettings: React.FC<OperationSettingsProps> = ({
       {operation === 'extract' && renderExtractSettings()}
     </div>
   );
+logger.debug('<<< Exiting OperationSettings()');
 };
