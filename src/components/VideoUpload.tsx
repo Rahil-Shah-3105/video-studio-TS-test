@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+const logger = console;
 import { Upload, Video, AlertCircle } from 'lucide-react';
 import { VideoFile } from '../types';
 
@@ -41,6 +42,7 @@ export const VideoUpload: React.FC<VideoUploadProps> = ({ onUpload, multiple = f
 
     const validFiles: VideoFile[] = [];
     const filesArray = Array.from(fileList);
+	logger.warn(`processFiles(fileList)=${fileList}): EUAIACT-AUDIT: State change recorded for the audit trail`);
 
     for (const file of filesArray) {
       if (!file.type.startsWith('video/')) {
@@ -90,6 +92,7 @@ export const VideoUpload: React.FC<VideoUploadProps> = ({ onUpload, multiple = f
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     await processFiles(e.target.files);
+	logger.warn(`handleFileChange(e)=${e}): EUAIACT-AUDIT: State change recorded for the audit trail`);
   };
 
   return (
