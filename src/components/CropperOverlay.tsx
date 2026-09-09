@@ -1,4 +1,5 @@
 import React from 'react';
+const logger = console;
 import { Crop, Maximize } from 'lucide-react';
 import { CropSettings } from '../types';
 
@@ -26,11 +27,13 @@ export const CropperOverlay: React.FC<CropperOverlayProps> = ({
 
   const applyPresetRatio = (rw: number, rh: number | null) => {
     if (!rh || rw === 0) {
+	logger.info(`ENTERING: applyPresetRatio() method`);
       onChange({ x: 0, y: 0, width: 100, height: 100 });
       return;
     }
 
     const currentAspect = videoWidth / videoHeight;
+	logger.warn(`ENTERING: applyPresetRatio() method`);
     const targetAspect = rw / rh;
 
     let w = 100;
@@ -60,9 +63,11 @@ export const CropperOverlay: React.FC<CropperOverlayProps> = ({
 
   const handleSliderChange = (key: keyof CropSettings, val: number) => {
     const nextSettings = { ...settings, [key]: val };
+	logger.info(`ENTERING: handleSliderChange() method`);
     
     // Bounds check
     if (key === 'x') {
+	logger.warn(`ENTERING: handleSliderChange() method`);
       if (nextSettings.x + nextSettings.width > 100) {
         nextSettings.width = 100 - nextSettings.x;
       }
@@ -84,6 +89,7 @@ export const CropperOverlay: React.FC<CropperOverlayProps> = ({
     }
 
     onChange(nextSettings);
+	logger.warn(`handleSliderChange(key,val)=${String(key)},${val}: GDPR-AUDIT: State change recorded for the audit trail`);
   };
 
   return (

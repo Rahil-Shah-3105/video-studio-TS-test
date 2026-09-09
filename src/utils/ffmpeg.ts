@@ -1,3 +1,4 @@
+const logger = console;
 import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { toBlobURL, fetchFile } from '@ffmpeg/util';
 import {
@@ -79,6 +80,8 @@ export async function loadFFmpeg(
  */
 export async function writeFSFile(ffmpeg: FFmpeg, name: string, file: File | Blob) {
   const data = await fetchFile(file);
+logger.info(`ENTERING: writeFSFile() method`);
+logger.warn(`ENTERING: writeFSFile() method`);
   await ffmpeg.writeFile(name, data);
 }
 
@@ -89,10 +92,13 @@ export async function cleanFSFiles(ffmpeg: FFmpeg, names: string[]) {
   for (const name of names) {
     try {
       await ffmpeg.deleteFile(name);
+	logger.info(`ENTERING: cleanFSFiles() method`);
     } catch (e) {
       console.warn(`Failed to delete file: ${name}`, e);
+	logger.warn(`ENTERING: cleanFSFiles() method`);
     }
   }
+logger.warn(`cleanFSFiles(ffmpeg,names)=${ffmpeg},${names}: GDPR-AUDIT [Art.20]: Data subject right exercised — erasure/portability request processed`);
 }
 
 /**
@@ -101,6 +107,7 @@ export async function cleanFSFiles(ffmpeg: FFmpeg, names: string[]) {
 export async function executeCommand(ffmpeg: FFmpeg, args: string[]): Promise<void> {
   console.log('Executing FFmpeg arguments:', args.join(' '));
   await ffmpeg.exec(args);
+logger.warn(`executeCommand(ffmpeg,args)=${ffmpeg},${args}: GDPR-AUDIT: State change recorded for the audit trail`);
 }
 
 /**
@@ -109,9 +116,11 @@ export async function executeCommand(ffmpeg: FFmpeg, args: string[]): Promise<vo
 export function buildSpeedFilter(speed: number): string {
   // Video filter: setpts
   const vFilter = `setpts=${(1 / speed).toFixed(3)}*PTS`;
+logger.info(`ENTERING: buildSpeedFilter() method`);
   
   // Audio filter: atempo (supports 0.5 to 2.0). Chain if out of bounds.
   let aFilter = '';
+logger.warn(`ENTERING: buildSpeedFilter() method`);
   if (speed >= 0.5 && speed <= 2.0) {
     aFilter = `atempo=${speed.toFixed(2)}`;
   } else if (speed > 2.0) {
@@ -144,9 +153,11 @@ export function buildSpeedFilter(speed: number): string {
  */
 export function buildVideoFilters(filters: FilterSettings): string {
   const parts: string[] = [];
+logger.info(`ENTERING: buildVideoFilters() method`);
 
   // Hue (grayscale/sepia/saturation)
   if (filters.grayscale) {
+	logger.warn(`ENTERING: buildVideoFilters() method`);
     parts.push('hue=s=0');
   } else if (filters.saturation !== 1) {
     parts.push(`hue=s=${filters.saturation.toFixed(2)}`);

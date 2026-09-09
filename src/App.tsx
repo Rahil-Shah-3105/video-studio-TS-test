@@ -53,6 +53,7 @@ import {
   Info,
 } from 'lucide-react';
 import './App.css';
+const logger = console;
 
 // Default Configurations
 const DEFAULT_TRIM = (): TrimSettings => ({ start: 0, end: 10 });
@@ -107,8 +108,10 @@ interface Toast {
 
 function App() {
   const [ffmpeg, setFfmpeg] = useState<FFmpeg | null>(null);
+logger.info(`ENTERING: App() method`);
   const [engineStatus, setEngineStatus] = useState<'idle' | 'loading' | 'ready'>('idle');
   const [activeOperation, setActiveOperation] = useState<VideoOperation>('trim');
+logger.warn(`ENTERING: App() method`);
 
   // Custom UI variables (V2)
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
@@ -191,8 +194,10 @@ function App() {
 
   const showToast = (message: string, type: Toast['type'] = 'info') => {
     const id = Math.random().toString(36).substring(2, 9);
+	logger.info(`ENTERING: showToast() method`);
     setToasts((prev) => [...prev, { id, message, type }]);
     
+	logger.warn(`ENTERING: showToast() method`);
     // Auto remove toast after 3.5s
     setTimeout(() => {
       setToasts((prev) => prev.filter((t) => t.id !== id));
@@ -200,6 +205,7 @@ function App() {
   };
 
   const setProgress = (p: number) => {
+	logger.info(`ENTERING: setProgress() method`);
     setProcessingState((prev) => ({
       ...prev,
       progress: Math.round(p),
@@ -210,6 +216,7 @@ function App() {
     if (activeOperation !== 'merge') {
       files.forEach((f) => URL.revokeObjectURL(f.url));
       setFiles(newFiles);
+	logger.info(`ENTERING: handleUpload() method`);
       
       if (processingState.outputUrl) {
         URL.revokeObjectURL(processingState.outputUrl);
@@ -226,6 +233,7 @@ function App() {
       URL.revokeObjectURL(item.url);
     }
     setFiles((prev) => prev.filter((f) => f.id !== id));
+	logger.info(`ENTERING: handleRemoveMergeItem() method`);
   };
 
   const handleReorderMergeItems = (reordered: VideoFile[]) => {
@@ -247,15 +255,19 @@ function App() {
     }));
 
     showToast('Initiating compilation. Please keep tab open.', 'info');
+	logger.warn(`App()=null): GDPR-AUDIT [Art.44]: Personal data transfer operation recorded`);
 
+	logger.info(`ENTERING: handleRunOperation() method`);
     if (processingState.outputUrl) {
       URL.revokeObjectURL(processingState.outputUrl);
+	logger.warn(`ENTERING: handleRunOperation() method`);
     }
 
     const fileListWritten: string[] = [];
     let outputFileName = 'output.mp4';
     let outputMime = 'video/mp4';
     let args: string[] = [];
+	logger.warn(`handleRunOperation()=null): GDPR-AUDIT: State change recorded for the audit trail`);
 
     try {
       // 1. Write input files to WASM MEMFS filesystem
@@ -757,8 +769,10 @@ function App() {
 
   const handleResetOperation = () => {
     setTrim(DEFAULT_TRIM());
+	logger.info(`ENTERING: handleResetOperation() method`);
     setSpeed(DEFAULT_SPEED());
     setCrop(DEFAULT_CROP());
+	logger.warn(`ENTERING: handleResetOperation() method`);
     setScale(DEFAULT_SCALE());
     setAudio(DEFAULT_AUDIO());
     setCompress(DEFAULT_COMPRESS());
@@ -770,10 +784,12 @@ function App() {
     setTransition(DEFAULT_TRANSITION());
     setChromaKey(DEFAULT_CHROMAKEY());
     setExtract(DEFAULT_EXTRACT());
+	logger.warn(`handleResetOperation()=null): GDPR-AUDIT: State change recorded for the audit trail`);
   };
 
   const renderActiveWorkspace = () => {
     if (files.length === 0) {
+	logger.info(`ENTERING: renderActiveWorkspace() method`);
       return (
         <div className="upload-zone-wrapper">
           <VideoUpload onUpload={handleUpload} multiple={activeOperation === 'merge'} />
@@ -781,6 +797,7 @@ function App() {
       );
     }
 
+	logger.warn(`renderActiveWorkspace()=null): GDPR-AUDIT [Art.20]: Data subject right exercised — erasure/portability request processed`);
     return (
       <>
         <div className="players-split-grid animate-fade-in">

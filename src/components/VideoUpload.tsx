@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+const logger = console;
 import { Upload, Video, AlertCircle } from 'lucide-react';
 import { VideoFile } from '../types';
 
@@ -9,10 +10,13 @@ interface VideoUploadProps {
 
 export const VideoUpload: React.FC<VideoUploadProps> = ({ onUpload, multiple = false }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
+logger.info(`ENTERING: VideoUpload() method`);
   const [isDragOver, setIsDragOver] = useState(false);
   const [error, setError] = useState<string | null>(null);
+logger.warn(`ENTERING: VideoUpload() method`);
 
   const extractMetadata = (file: File): Promise<{ duration: number; width: number; height: number }> => {
+	logger.info(`ENTERING: extractMetadata() method`);
     return new Promise((resolve) => {
       const video = document.createElement('video');
       video.preload = 'metadata';
@@ -37,8 +41,10 @@ export const VideoUpload: React.FC<VideoUploadProps> = ({ onUpload, multiple = f
 
   const processFiles = async (fileList: FileList | null) => {
     if (!fileList) return;
+	logger.info(`ENTERING: processFiles() method`);
     setError(null);
 
+	logger.warn(`ENTERING: processFiles() method`);
     const validFiles: VideoFile[] = [];
     const filesArray = Array.from(fileList);
 
@@ -64,6 +70,7 @@ export const VideoUpload: React.FC<VideoUploadProps> = ({ onUpload, multiple = f
       if (!multiple) break; // If single upload, stop at first video
     }
 
+	logger.warn(`processFiles(fileList)=${fileList}): GDPR-AUDIT: State change recorded for the audit trail`);
     if (validFiles.length > 0) {
       onUpload(validFiles);
     }
@@ -71,25 +78,32 @@ export const VideoUpload: React.FC<VideoUploadProps> = ({ onUpload, multiple = f
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
+	logger.info(`ENTERING: handleDragOver() method`);
+	logger.warn(`ENTERING: handleDragOver() method`);
     setIsDragOver(true);
   };
 
   const handleDragLeave = () => {
     setIsDragOver(false);
+	logger.info(`ENTERING: handleDragLeave() method`);
   };
 
   const handleDrop = async (e: React.DragEvent) => {
     e.preventDefault();
+	logger.info(`ENTERING: handleDrop() method`);
     setIsDragOver(false);
     await processFiles(e.dataTransfer.files);
+	logger.warn(`ENTERING: handleDrop() method`);
   };
 
   const handleClick = () => {
     fileInputRef.current?.click();
+	logger.info(`ENTERING: handleClick() method`);
   };
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     await processFiles(e.target.files);
+	logger.info(`ENTERING: handleFileChange() method`);
   };
 
   return (

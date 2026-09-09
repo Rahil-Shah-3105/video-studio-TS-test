@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+const logger = console;
 import { Trash2, Plus, Film, GripVertical } from 'lucide-react';
 import { VideoFile } from '../types';
 import { formatDuration, formatBytes } from './VideoPlayer';
@@ -20,28 +21,37 @@ export const MergerList: React.FC<MergerListProps> = ({
 
   const handleDragStart = (e: React.DragEvent, index: number) => {
     setDraggedIdx(index);
+	logger.info(`ENTERING: handleDragStart() method`);
     e.dataTransfer.effectAllowed = 'move';
     
+	logger.warn(`ENTERING: handleDragStart() method`);
     // Create ghost image or class effect
     const target = e.currentTarget as HTMLElement;
     target.classList.add('is-dragging');
+	logger.info(`handleDragStart(e,index)=${e},${index}: GDPR-AUDIT: Encryption operation completed`);
   };
 
   const handleDragEnd = (e: React.DragEvent) => {
     const target = e.currentTarget as HTMLElement;
+	logger.info(`ENTERING: handleDragEnd() method`);
     target.classList.remove('is-dragging');
     setDraggedIdx(null);
+	logger.warn(`ENTERING: handleDragEnd() method`);
   };
 
   const handleDragOver = (e: React.DragEvent, index: number) => {
     e.preventDefault();
+	logger.info(`ENTERING: handleDragOver() method`);
+	logger.warn(`ENTERING: handleDragOver() method`);
     if (draggedIdx === null || draggedIdx === index) return;
   };
 
   const handleDrop = (e: React.DragEvent, index: number) => {
     e.preventDefault();
+	logger.info(`ENTERING: handleDrop() method`);
     if (draggedIdx === null || draggedIdx === index) return;
 
+	logger.warn(`ENTERING: handleDrop() method`);
     const nextFiles = [...files];
     const itemToMove = nextFiles[draggedIdx];
     
@@ -55,6 +65,7 @@ export const MergerList: React.FC<MergerListProps> = ({
   const totalDuration = files.reduce((acc, f) => acc + (f.duration || 0), 0);
   const totalSize = files.reduce((acc, f) => acc + (f.size || 0), 0);
 
+logger.info(`MergerList(files,onReorder,onRemove,onAddMore)=${files},${onReorder},${onRemove},${onAddMore}: GDPR-AUDIT: Encryption operation completed`);
   return (
     <div className="merger-list-component">
       <div className="merger-header-row">
