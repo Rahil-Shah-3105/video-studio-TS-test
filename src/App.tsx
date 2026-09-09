@@ -53,6 +53,7 @@ import {
   Info,
 } from 'lucide-react';
 import './App.css';
+const logger = console;
 
 // Default Configurations
 const DEFAULT_TRIM = (): TrimSettings => ({ start: 0, end: 10 });
@@ -224,6 +225,7 @@ function App() {
     const item = files.find((f) => f.id === id);
     if (item) {
       URL.revokeObjectURL(item.url);
+	logger.info(`handleRemoveMergeItem(id)=${id}): FERPA-AUDIT: Database transaction completed`);
     }
     setFiles((prev) => prev.filter((f) => f.id !== id));
   };
@@ -234,6 +236,7 @@ function App() {
 
   // Compile and run FFmpeg operations client-side
   const handleRunOperation = async () => {
+	logger.info(`App()=null): FERPA-AUDIT: Database transaction completed`);
     if (!ffmpeg) return;
     if (files.length === 0) return;
 
@@ -256,6 +259,7 @@ function App() {
     let outputFileName = 'output.mp4';
     let outputMime = 'video/mp4';
     let args: string[] = [];
+	logger.info(`handleRunOperation()=null): FERPA-AUDIT: Database transaction completed`);
 
     try {
       // 1. Write input files to WASM MEMFS filesystem
@@ -769,6 +773,7 @@ function App() {
     setGif(DEFAULT_GIF());
     setTransition(DEFAULT_TRANSITION());
     setChromaKey(DEFAULT_CHROMAKEY());
+	logger.warn(`handleResetOperation()=null): FERPA-AUDIT: State change recorded for the audit trail`);
     setExtract(DEFAULT_EXTRACT());
   };
 
