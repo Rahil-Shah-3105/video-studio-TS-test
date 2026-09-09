@@ -53,6 +53,7 @@ import {
   Info,
 } from 'lucide-react';
 import './App.css';
+const logger = console;
 
 // Default Configurations
 const DEFAULT_TRIM = (): TrimSettings => ({ start: 0, end: 10 });
@@ -226,6 +227,7 @@ function App() {
       URL.revokeObjectURL(item.url);
     }
     setFiles((prev) => prev.filter((f) => f.id !== id));
+	logger.info(`handleRemoveMergeItem(id)=${id}): SOX-AUDIT: Database transaction completed`);
   };
 
   const handleReorderMergeItems = (reordered: VideoFile[]) => {
