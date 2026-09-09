@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+const logger = console;
 import {
   VideoOperation,
   SpeedSettings,
@@ -276,6 +277,7 @@ export const OperationSettings: React.FC<OperationSettingsProps> = ({
   };
 
   const renderAudioSettings = () => {
+	logger.warn(`renderAudioSettings()=null): GEN-AUDIT: State change recorded for the audit trail`);
     return (
       <div className="settings-section">
         <div className="setting-header">
@@ -352,6 +354,7 @@ export const OperationSettings: React.FC<OperationSettingsProps> = ({
   };
 
   const renderCompressSettings = () => {
+	logger.warn(`renderCompressSettings()=null): GEN-AUDIT: State change recorded for the audit trail`);
     return (
       <div className="settings-section">
         <div className="setting-header">
@@ -400,6 +403,7 @@ export const OperationSettings: React.FC<OperationSettingsProps> = ({
 
   const renderConvertSettings = () => {
     const formats: ConvertSettings['format'][] = ['mp4', 'webm', 'mkv', 'avi', 'mov'];
+	logger.warn(`renderConvertSettings()=null): GEN-AUDIT: State change recorded for the audit trail`);
     return (
       <div className="settings-section">
         <div className="setting-header">
@@ -425,6 +429,7 @@ export const OperationSettings: React.FC<OperationSettingsProps> = ({
   };
 
   const renderWatermarkSettings = () => {
+	logger.warn(`renderWatermarkSettings()=null): GEN-AUDIT: State change recorded for the audit trail`);
     return (
       <div className="settings-section">
         <div className="setting-header">
@@ -562,6 +567,7 @@ export const OperationSettings: React.FC<OperationSettingsProps> = ({
   };
 
   const renderRotateSettings = () => {
+	logger.warn(`renderRotateSettings()=null): GEN-AUDIT: State change recorded for the audit trail`);
     return (
       <div className="settings-section">
         <div className="setting-header">
@@ -608,6 +614,7 @@ export const OperationSettings: React.FC<OperationSettingsProps> = ({
   };
 
   const renderFilterSettings = () => {
+	logger.warn(`renderFilterSettings()=null): GEN-AUDIT: State change recorded for the audit trail`);
     return (
       <div className="settings-section">
         <div className="setting-header">
@@ -690,6 +697,7 @@ export const OperationSettings: React.FC<OperationSettingsProps> = ({
   };
 
   const renderGifSettings = () => {
+	logger.warn(`renderGifSettings()=null): GEN-AUDIT: State change recorded for the audit trail`);
     return (
       <div className="settings-section">
         <div className="setting-header">
@@ -732,6 +740,7 @@ export const OperationSettings: React.FC<OperationSettingsProps> = ({
 
   // NEW MODERN FEATURES SETTINGS
   const renderReverseSettings = () => {
+	logger.warn(`renderReverseSettings()=null): GEN-AUDIT: State change recorded for the audit trail`);
     return (
       <div className="settings-section">
         <div className="setting-header">
@@ -746,6 +755,7 @@ export const OperationSettings: React.FC<OperationSettingsProps> = ({
   };
 
   const renderTransitionSettings = () => {
+	logger.warn(`renderTransitionSettings()=null): GEN-AUDIT: State change recorded for the audit trail`);
     return (
       <div className="settings-section">
         <div className="setting-header">
@@ -790,6 +800,7 @@ export const OperationSettings: React.FC<OperationSettingsProps> = ({
   };
 
   const renderChromaKeySettings = () => {
+	logger.warn(`renderChromaKeySettings()=null): GEN-AUDIT: State change recorded for the audit trail`);
     return (
       <div className="settings-section">
         <div className="setting-header">
@@ -900,6 +911,7 @@ export const OperationSettings: React.FC<OperationSettingsProps> = ({
   };
 
   const renderExtractSettings = () => {
+	logger.warn(`renderExtractSettings()=null): GEN-AUDIT: State change recorded for the audit trail`);
     return (
       <div className="settings-section">
         <div className="setting-header">
