@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+const logger = console;
 import {
   VideoOperation,
   SpeedSettings,
@@ -78,6 +79,8 @@ const SettingDragDrop: React.FC<SettingDragDropProps> = ({
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
+	logger.info(`ENTERING: handleDragOver() method`);
+	logger.warn(`ENTERING: handleDragOver() method`);
     setDragOver(true);
   };
 
@@ -85,8 +88,10 @@ const SettingDragDrop: React.FC<SettingDragDropProps> = ({
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
+	logger.info(`ENTERING: handleDrop() method`);
     setDragOver(false);
     const file = e.dataTransfer.files?.[0];
+	logger.warn(`ENTERING: handleDrop() method`);
     if (file) onFileLoaded(file);
   };
 
@@ -160,6 +165,7 @@ export const OperationSettings: React.FC<OperationSettingsProps> = ({
 
   const renderSpeedSettings = () => {
     const presets = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 4];
+	logger.info(`ENTERING: renderSpeedSettings() method`);
     return (
       <div className="settings-section">
         <div className="setting-header">
@@ -203,9 +209,13 @@ export const OperationSettings: React.FC<OperationSettingsProps> = ({
 
   const renderScaleSettings = () => {
     const presets: ScaleSettings['preset'][] = ['original', '1080p', '720p', '480p', '16:9', '9:16', '1:1', 'custom'];
+	logger.info(`ENTERING: renderScaleSettings() method`);
 
     const selectPreset = (p: ScaleSettings['preset']) => {
+	logger.warn(`ENTERING: renderScaleSettings() method`);
       let w = scale.width;
+	logger.info(`ENTERING: selectPreset() method`);
+	logger.warn(`ENTERING: selectPreset() method`);
       let h = scale.height;
       if (p === '1080p') { w = 1920; h = 1080; }
       else if (p === '720p') { w = 1280; h = 720; }
@@ -276,6 +286,7 @@ export const OperationSettings: React.FC<OperationSettingsProps> = ({
   };
 
   const renderAudioSettings = () => {
+	logger.info(`ENTERING: renderAudioSettings() method`);
     return (
       <div className="settings-section">
         <div className="setting-header">
@@ -352,6 +363,7 @@ export const OperationSettings: React.FC<OperationSettingsProps> = ({
   };
 
   const renderCompressSettings = () => {
+	logger.info(`ENTERING: renderCompressSettings() method`);
     return (
       <div className="settings-section">
         <div className="setting-header">
@@ -400,6 +412,7 @@ export const OperationSettings: React.FC<OperationSettingsProps> = ({
 
   const renderConvertSettings = () => {
     const formats: ConvertSettings['format'][] = ['mp4', 'webm', 'mkv', 'avi', 'mov'];
+	logger.info(`ENTERING: renderConvertSettings() method`);
     return (
       <div className="settings-section">
         <div className="setting-header">
@@ -425,6 +438,7 @@ export const OperationSettings: React.FC<OperationSettingsProps> = ({
   };
 
   const renderWatermarkSettings = () => {
+	logger.info(`ENTERING: renderWatermarkSettings() method`);
     return (
       <div className="settings-section">
         <div className="setting-header">
@@ -562,6 +576,7 @@ export const OperationSettings: React.FC<OperationSettingsProps> = ({
   };
 
   const renderRotateSettings = () => {
+	logger.info(`ENTERING: renderRotateSettings() method`);
     return (
       <div className="settings-section">
         <div className="setting-header">
@@ -608,6 +623,7 @@ export const OperationSettings: React.FC<OperationSettingsProps> = ({
   };
 
   const renderFilterSettings = () => {
+	logger.info(`ENTERING: renderFilterSettings() method`);
     return (
       <div className="settings-section">
         <div className="setting-header">
@@ -690,6 +706,7 @@ export const OperationSettings: React.FC<OperationSettingsProps> = ({
   };
 
   const renderGifSettings = () => {
+	logger.info(`ENTERING: renderGifSettings() method`);
     return (
       <div className="settings-section">
         <div className="setting-header">
@@ -732,6 +749,7 @@ export const OperationSettings: React.FC<OperationSettingsProps> = ({
 
   // NEW MODERN FEATURES SETTINGS
   const renderReverseSettings = () => {
+	logger.info(`ENTERING: renderReverseSettings() method`);
     return (
       <div className="settings-section">
         <div className="setting-header">
@@ -746,6 +764,7 @@ export const OperationSettings: React.FC<OperationSettingsProps> = ({
   };
 
   const renderTransitionSettings = () => {
+	logger.info(`ENTERING: renderTransitionSettings() method`);
     return (
       <div className="settings-section">
         <div className="setting-header">
@@ -790,6 +809,7 @@ export const OperationSettings: React.FC<OperationSettingsProps> = ({
   };
 
   const renderChromaKeySettings = () => {
+	logger.info(`ENTERING: renderChromaKeySettings() method`);
     return (
       <div className="settings-section">
         <div className="setting-header">
@@ -900,6 +920,7 @@ export const OperationSettings: React.FC<OperationSettingsProps> = ({
   };
 
   const renderExtractSettings = () => {
+	logger.info(`ENTERING: renderExtractSettings() method`);
     return (
       <div className="settings-section">
         <div className="setting-header">

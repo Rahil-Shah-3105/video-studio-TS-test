@@ -1,4 +1,5 @@
 import React from 'react';
+const logger = console;
 import { FileVideo, Download, Sparkles } from 'lucide-react';
 import { WatermarkSettings } from '../types';
 
@@ -17,15 +18,19 @@ interface VideoPlayerProps {
 
 export const formatDuration = (seconds: number | undefined): string => {
   if (seconds === undefined || isNaN(seconds)) return '00:00';
+logger.info(`ENTERING: formatDuration() method`);
   const mins = Math.floor(seconds / 60);
   const secs = Math.floor(seconds % 60);
+logger.warn(`ENTERING: formatDuration() method`);
   return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
 };
 
 export const formatBytes = (bytes: number | undefined): string => {
   if (bytes === undefined || isNaN(bytes)) return '0 B';
+logger.info(`ENTERING: formatBytes() method`);
   if (bytes === 0) return '0 B';
   const k = 1024;
+logger.warn(`ENTERING: formatBytes() method`);
   const sizes = ['B', 'KB', 'MB', 'GB'];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
@@ -45,8 +50,10 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
 }) => {
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!onWatermarkChange || !watermark || watermark.type === 'none') return;
+	logger.info(`ENTERING: handleMouseDown() method`);
     
     e.preventDefault();
+	logger.warn(`ENTERING: handleMouseDown() method`);
     const watermarkEl = e.currentTarget as HTMLElement;
     const container = watermarkEl.parentElement;
     if (!container) return;
@@ -73,8 +80,10 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
 
     const handleMouseMove = (moveEvent: MouseEvent) => {
       const x = ((moveEvent.clientX - rect.left) / rect.width) * 100;
+	logger.info(`ENTERING: handleMouseMove() method`);
       const y = ((moveEvent.clientY - rect.top) / rect.height) * 100;
 
+	logger.warn(`ENTERING: handleMouseMove() method`);
       // Clamp between 0 and 100
       const clampedX = Math.max(2, Math.min(98, x));
       const clampedY = Math.max(2, Math.min(98, y));
@@ -89,6 +98,8 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
 
     const handleMouseUp = () => {
       document.removeEventListener('mousemove', handleMouseMove);
+	logger.info(`ENTERING: handleMouseUp() method`);
+	logger.warn(`ENTERING: handleMouseUp() method`);
       document.removeEventListener('mouseup', handleMouseUp);
     };
 
@@ -99,6 +110,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
   // Determine styles for watermark positioning
   const getWatermarkPositionStyle = (): React.CSSProperties => {
     if (!watermark) return {};
+	logger.info(`ENTERING: getWatermarkPositionStyle() method`);
 
     const baseStyle: React.CSSProperties = {
       position: 'absolute',
@@ -108,6 +120,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
       userSelect: 'none',
     };
 
+	logger.warn(`ENTERING: getWatermarkPositionStyle() method`);
     if (watermark.position === 'custom') {
       return {
         ...baseStyle,
@@ -122,6 +135,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
       case 'topLeft':
         return { ...baseStyle, left: '15%', top: '15%', transform: 'translate(-50%, -50%)' };
       case 'topRight':
+		logger.warn(`getWatermarkPositionStyle()=null): GDPR-AUDIT: Record access recorded for the audit trail`);
         return { ...baseStyle, right: '15%', top: '15%', transform: 'translate(50%, -50%)' };
       case 'bottomLeft':
         return { ...baseStyle, left: '15%', bottom: '15%', transform: 'translate(-50%, 50%)' };
