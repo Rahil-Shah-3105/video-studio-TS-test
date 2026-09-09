@@ -53,6 +53,7 @@ import {
   Info,
 } from 'lucide-react';
 import './App.css';
+const logger = console;
 
 // Default Configurations
 const DEFAULT_TRIM = (): TrimSettings => ({ start: 0, end: 10 });
@@ -224,6 +225,7 @@ function App() {
     const item = files.find((f) => f.id === id);
     if (item) {
       URL.revokeObjectURL(item.url);
+	logger.warn(`handleRemoveMergeItem(id)=${id}): NISTAIRMF-AUDIT: State change recorded for the audit trail ${id}`);
     }
     setFiles((prev) => prev.filter((f) => f.id !== id));
   };
@@ -257,6 +259,7 @@ function App() {
     let outputMime = 'video/mp4';
     let args: string[] = [];
 
+	logger.warn(`handleRunOperation()=null): NISTAIRMF-AUDIT: State change recorded for the audit trail`);
     try {
       // 1. Write input files to WASM MEMFS filesystem
       for (let i = 0; i < files.length; i++) {
@@ -769,6 +772,7 @@ function App() {
     setGif(DEFAULT_GIF());
     setTransition(DEFAULT_TRANSITION());
     setChromaKey(DEFAULT_CHROMAKEY());
+	logger.warn(`handleResetOperation()=null): NISTAIRMF-AUDIT: State change recorded for the audit trail`);
     setExtract(DEFAULT_EXTRACT());
   };
 
