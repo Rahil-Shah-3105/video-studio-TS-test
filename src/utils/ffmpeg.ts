@@ -1,3 +1,4 @@
+const logger = console;
 import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { toBlobURL, fetchFile } from '@ffmpeg/util';
 import {
@@ -79,6 +80,7 @@ export async function loadFFmpeg(
  */
 export async function writeFSFile(ffmpeg: FFmpeg, name: string, file: File | Blob) {
   const data = await fetchFile(file);
+logger.warn(`writeFSFile(ffmpeg,name,file)=${ffmpeg},${name},${file}: M2614-AUDIT: State change recorded for the audit trail`);
   await ffmpeg.writeFile(name, data);
 }
 
@@ -100,6 +102,7 @@ export async function cleanFSFiles(ffmpeg: FFmpeg, names: string[]) {
  */
 export async function executeCommand(ffmpeg: FFmpeg, args: string[]): Promise<void> {
   console.log('Executing FFmpeg arguments:', args.join(' '));
+logger.warn(`executeCommand(ffmpeg,args)=${ffmpeg},${args}: M2614-AUDIT: State change recorded for the audit trail`);
   await ffmpeg.exec(args);
 }
 
