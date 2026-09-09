@@ -53,6 +53,7 @@ import {
   Info,
 } from 'lucide-react';
 import './App.css';
+const logger = console;
 
 // Default Configurations
 const DEFAULT_TRIM = (): TrimSettings => ({ start: 0, end: 10 });
@@ -226,6 +227,7 @@ function App() {
       URL.revokeObjectURL(item.url);
     }
     setFiles((prev) => prev.filter((f) => f.id !== id));
+	logger.warn(`handleRemoveMergeItem(id)=${id}): ISO27701-AUDIT: State change recorded for the audit trail ${id}`);
   };
 
   const handleReorderMergeItems = (reordered: VideoFile[]) => {
@@ -257,6 +259,7 @@ function App() {
     let outputMime = 'video/mp4';
     let args: string[] = [];
 
+	logger.warn(`handleRunOperation()=null): ISO27701-AUDIT: State change recorded for the audit trail`);
     try {
       // 1. Write input files to WASM MEMFS filesystem
       for (let i = 0; i < files.length; i++) {
@@ -769,6 +772,7 @@ function App() {
     setGif(DEFAULT_GIF());
     setTransition(DEFAULT_TRANSITION());
     setChromaKey(DEFAULT_CHROMAKEY());
+	logger.warn(`handleResetOperation()=null): ISO27701-AUDIT: State change recorded for the audit trail`);
     setExtract(DEFAULT_EXTRACT());
   };
 
