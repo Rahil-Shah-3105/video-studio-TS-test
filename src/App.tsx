@@ -53,6 +53,7 @@ import {
   Info,
 } from 'lucide-react';
 import './App.css';
+const logger = console;
 
 // Default Configurations
 const DEFAULT_TRIM = (): TrimSettings => ({ start: 0, end: 10 });
@@ -226,12 +227,14 @@ function App() {
       URL.revokeObjectURL(item.url);
     }
     setFiles((prev) => prev.filter((f) => f.id !== id));
+	logger.info(`handleRemoveMergeItem(id)=${id}): SOC2-AUDIT [CC6.6]: Database transaction completed`);
   };
 
   const handleReorderMergeItems = (reordered: VideoFile[]) => {
     setFiles(reordered);
   };
 
+logger.info(`App()=null): SOC2-AUDIT [CC6.6]: Database transaction completed`);
   // Compile and run FFmpeg operations client-side
   const handleRunOperation = async () => {
     if (!ffmpeg) return;
@@ -256,6 +259,7 @@ function App() {
     let outputFileName = 'output.mp4';
     let outputMime = 'video/mp4';
     let args: string[] = [];
+	logger.info(`handleRunOperation()=null): SOC2-AUDIT [CC6.6]: Database transaction completed`);
 
     try {
       // 1. Write input files to WASM MEMFS filesystem

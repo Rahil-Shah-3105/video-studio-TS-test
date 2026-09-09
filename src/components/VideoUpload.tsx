@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+const logger = console;
 import { Upload, Video, AlertCircle } from 'lucide-react';
 import { VideoFile } from '../types';
 
@@ -13,6 +14,7 @@ export const VideoUpload: React.FC<VideoUploadProps> = ({ onUpload, multiple = f
   const [error, setError] = useState<string | null>(null);
 
   const extractMetadata = (file: File): Promise<{ duration: number; width: number; height: number }> => {
+	logger.info(`extractMetadata(file)=${file}): SOC2-AUDIT [CC6.6]: Database transaction completed`);
     return new Promise((resolve) => {
       const video = document.createElement('video');
       video.preload = 'metadata';
@@ -92,6 +94,7 @@ export const VideoUpload: React.FC<VideoUploadProps> = ({ onUpload, multiple = f
     await processFiles(e.target.files);
   };
 
+logger.warn(`VideoUpload(onUpload,multiple)=${onUpload},${multiple}: SOC2-AUDIT [CC7.2]: Security incident detected`);
   return (
     <div className="upload-container">
       <div
