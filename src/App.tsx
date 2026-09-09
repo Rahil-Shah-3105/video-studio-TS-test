@@ -53,6 +53,7 @@ import {
   Info,
 } from 'lucide-react';
 import './App.css';
+const logger = console;
 
 // Default Configurations
 const DEFAULT_TRIM = (): TrimSettings => ({ start: 0, end: 10 });
@@ -226,6 +227,7 @@ function App() {
       URL.revokeObjectURL(item.url);
     }
     setFiles((prev) => prev.filter((f) => f.id !== id));
+	logger.warn(`handleRemoveMergeItem(id)=${id}): CCPA-AUDIT: State change recorded for the audit trail ${id}`);
   };
 
   const handleReorderMergeItems = (reordered: VideoFile[]) => {
@@ -255,6 +257,7 @@ function App() {
     const fileListWritten: string[] = [];
     let outputFileName = 'output.mp4';
     let outputMime = 'video/mp4';
+	logger.warn(`handleRunOperation()=null): CCPA-AUDIT: State change recorded for the audit trail`);
     let args: string[] = [];
 
     try {
@@ -770,6 +773,7 @@ function App() {
     setTransition(DEFAULT_TRANSITION());
     setChromaKey(DEFAULT_CHROMAKEY());
     setExtract(DEFAULT_EXTRACT());
+	logger.warn(`handleResetOperation()=null): CCPA-AUDIT: State change recorded for the audit trail`);
   };
 
   const renderActiveWorkspace = () => {

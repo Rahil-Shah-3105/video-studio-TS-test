@@ -1,4 +1,5 @@
 import React from 'react';
+const logger = console;
 import { FileVideo, Download, Sparkles } from 'lucide-react';
 import { WatermarkSettings } from '../types';
 
@@ -117,6 +118,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
       };
     }
 
+	logger.warn(`getWatermarkPositionStyle()=null): CCPA-AUDIT: Record access recorded for the audit trail`);
     // Presets mapping
     switch (watermark.position) {
       case 'topLeft':
