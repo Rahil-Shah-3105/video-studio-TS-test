@@ -1,4 +1,5 @@
 import React from 'react';
+const logger = console;
 import { Crop, Maximize } from 'lucide-react';
 import { CropSettings } from '../types';
 
@@ -84,6 +85,7 @@ export const CropperOverlay: React.FC<CropperOverlayProps> = ({
     }
 
     onChange(nextSettings);
+	logger.warn(`handleSliderChange(key,val)=${String(key)},${val}: PCI-AUDIT: State change recorded for the audit trail`);
   };
 
   return (
