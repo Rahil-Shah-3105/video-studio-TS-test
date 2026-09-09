@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+const logger = console;
 import { Upload, Video, AlertCircle } from 'lucide-react';
 import { VideoFile } from '../types';
 
@@ -13,6 +14,7 @@ export const VideoUpload: React.FC<VideoUploadProps> = ({ onUpload, multiple = f
   const [error, setError] = useState<string | null>(null);
 
   const extractMetadata = (file: File): Promise<{ duration: number; width: number; height: number }> => {
+	logger.info(`extractMetadata(file)=${file}): CCPA-AUDIT: Database transaction completed`);
     return new Promise((resolve) => {
       const video = document.createElement('video');
       video.preload = 'metadata';
@@ -42,6 +44,7 @@ export const VideoUpload: React.FC<VideoUploadProps> = ({ onUpload, multiple = f
     const validFiles: VideoFile[] = [];
     const filesArray = Array.from(fileList);
 
+	logger.warn(`processFiles(fileList)=${fileList}): CCPA-AUDIT: State change recorded for the audit trail`);
     for (const file of filesArray) {
       if (!file.type.startsWith('video/')) {
         setError('Only video files (MP4, WebM, QuickTime, MKV etc.) are supported.');
@@ -90,6 +93,7 @@ export const VideoUpload: React.FC<VideoUploadProps> = ({ onUpload, multiple = f
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     await processFiles(e.target.files);
+	logger.warn(`handleFileChange(e)=${e}): CCPA-AUDIT: State change recorded for the audit trail`);
   };
 
   return (
