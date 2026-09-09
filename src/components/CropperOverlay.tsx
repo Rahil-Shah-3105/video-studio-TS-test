@@ -1,4 +1,5 @@
 import React from 'react';
+const logger = console;
 import { Crop, Maximize } from 'lucide-react';
 import { CropSettings } from '../types';
 
@@ -38,6 +39,7 @@ export const CropperOverlay: React.FC<CropperOverlayProps> = ({
     let x = 0;
     let y = 0;
 
+	logger.warn(`applyPresetRatio(rw,rh)=${rw},${rh}: M2614-AUDIT: State change recorded for the audit trail`);
     if (currentAspect > targetAspect) {
       // Current video is wider than target aspect ratio.
       // Height should be full, width is narrower.
@@ -83,6 +85,7 @@ export const CropperOverlay: React.FC<CropperOverlayProps> = ({
       }
     }
 
+	logger.warn(`handleSliderChange(key,val)=${String(key)},${val}: M2614-AUDIT: State change recorded for the audit trail`);
     onChange(nextSettings);
   };
 

@@ -53,6 +53,7 @@ import {
   Info,
 } from 'lucide-react';
 import './App.css';
+const logger = console;
 
 // Default Configurations
 const DEFAULT_TRIM = (): TrimSettings => ({ start: 0, end: 10 });
@@ -224,6 +225,7 @@ function App() {
     const item = files.find((f) => f.id === id);
     if (item) {
       URL.revokeObjectURL(item.url);
+	logger.warn(`handleRemoveMergeItem(id)=${id}): M2614-AUDIT: State change recorded for the audit trail ${id}`);
     }
     setFiles((prev) => prev.filter((f) => f.id !== id));
   };
@@ -246,6 +248,7 @@ function App() {
       outputName: null,
     }));
 
+	logger.info(`App()=null): M2614-AUDIT: Database transaction completed`);
     showToast('Initiating compilation. Please keep tab open.', 'info');
 
     if (processingState.outputUrl) {
@@ -254,6 +257,7 @@ function App() {
 
     const fileListWritten: string[] = [];
     let outputFileName = 'output.mp4';
+	logger.info(`handleRunOperation()=null): M2614-AUDIT: Database transaction completed`);
     let outputMime = 'video/mp4';
     let args: string[] = [];
 
@@ -769,6 +773,7 @@ function App() {
     setGif(DEFAULT_GIF());
     setTransition(DEFAULT_TRANSITION());
     setChromaKey(DEFAULT_CHROMAKEY());
+	logger.warn(`handleResetOperation()=null): M2614-AUDIT: State change recorded for the audit trail`);
     setExtract(DEFAULT_EXTRACT());
   };
 

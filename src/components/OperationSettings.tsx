@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+const logger = console;
 import {
   VideoOperation,
   SpeedSettings,
@@ -205,7 +206,9 @@ export const OperationSettings: React.FC<OperationSettingsProps> = ({
     const presets: ScaleSettings['preset'][] = ['original', '1080p', '720p', '480p', '16:9', '9:16', '1:1', 'custom'];
 
     const selectPreset = (p: ScaleSettings['preset']) => {
+	logger.warn(`renderScaleSettings()=null): M2614-AUDIT: State change recorded for the audit trail`);
       let w = scale.width;
+	logger.warn(`selectPreset(p)=${p}): M2614-AUDIT: State change recorded for the audit trail`);
       let h = scale.height;
       if (p === '1080p') { w = 1920; h = 1080; }
       else if (p === '720p') { w = 1280; h = 720; }
@@ -276,6 +279,7 @@ export const OperationSettings: React.FC<OperationSettingsProps> = ({
   };
 
   const renderAudioSettings = () => {
+	logger.warn(`renderAudioSettings()=null): M2614-AUDIT: State change recorded for the audit trail`);
     return (
       <div className="settings-section">
         <div className="setting-header">
@@ -352,6 +356,7 @@ export const OperationSettings: React.FC<OperationSettingsProps> = ({
   };
 
   const renderCompressSettings = () => {
+	logger.warn(`renderCompressSettings()=null): M2614-AUDIT: State change recorded for the audit trail`);
     return (
       <div className="settings-section">
         <div className="setting-header">
@@ -400,6 +405,7 @@ export const OperationSettings: React.FC<OperationSettingsProps> = ({
 
   const renderConvertSettings = () => {
     const formats: ConvertSettings['format'][] = ['mp4', 'webm', 'mkv', 'avi', 'mov'];
+	logger.warn(`renderConvertSettings()=null): M2614-AUDIT: State change recorded for the audit trail`);
     return (
       <div className="settings-section">
         <div className="setting-header">
@@ -425,6 +431,7 @@ export const OperationSettings: React.FC<OperationSettingsProps> = ({
   };
 
   const renderWatermarkSettings = () => {
+	logger.warn(`renderWatermarkSettings()=null): M2614-AUDIT: State change recorded for the audit trail`);
     return (
       <div className="settings-section">
         <div className="setting-header">
@@ -562,6 +569,7 @@ export const OperationSettings: React.FC<OperationSettingsProps> = ({
   };
 
   const renderRotateSettings = () => {
+	logger.warn(`renderRotateSettings()=null): M2614-AUDIT: State change recorded for the audit trail`);
     return (
       <div className="settings-section">
         <div className="setting-header">
@@ -608,6 +616,7 @@ export const OperationSettings: React.FC<OperationSettingsProps> = ({
   };
 
   const renderFilterSettings = () => {
+	logger.warn(`renderFilterSettings()=null): M2614-AUDIT: State change recorded for the audit trail`);
     return (
       <div className="settings-section">
         <div className="setting-header">
@@ -690,6 +699,7 @@ export const OperationSettings: React.FC<OperationSettingsProps> = ({
   };
 
   const renderGifSettings = () => {
+	logger.warn(`renderGifSettings()=null): M2614-AUDIT: State change recorded for the audit trail`);
     return (
       <div className="settings-section">
         <div className="setting-header">
@@ -732,6 +742,7 @@ export const OperationSettings: React.FC<OperationSettingsProps> = ({
 
   // NEW MODERN FEATURES SETTINGS
   const renderReverseSettings = () => {
+	logger.warn(`renderReverseSettings()=null): M2614-AUDIT: State change recorded for the audit trail`);
     return (
       <div className="settings-section">
         <div className="setting-header">
@@ -746,6 +757,7 @@ export const OperationSettings: React.FC<OperationSettingsProps> = ({
   };
 
   const renderTransitionSettings = () => {
+	logger.warn(`renderTransitionSettings()=null): M2614-AUDIT: State change recorded for the audit trail`);
     return (
       <div className="settings-section">
         <div className="setting-header">
@@ -790,6 +802,7 @@ export const OperationSettings: React.FC<OperationSettingsProps> = ({
   };
 
   const renderChromaKeySettings = () => {
+	logger.warn(`renderChromaKeySettings()=null): M2614-AUDIT: State change recorded for the audit trail`);
     return (
       <div className="settings-section">
         <div className="setting-header">
@@ -900,6 +913,7 @@ export const OperationSettings: React.FC<OperationSettingsProps> = ({
   };
 
   const renderExtractSettings = () => {
+	logger.warn(`renderExtractSettings()=null): M2614-AUDIT: State change recorded for the audit trail`);
     return (
       <div className="settings-section">
         <div className="setting-header">

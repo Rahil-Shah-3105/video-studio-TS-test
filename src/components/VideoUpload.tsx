@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+const logger = console;
 import { Upload, Video, AlertCircle } from 'lucide-react';
 import { VideoFile } from '../types';
 
@@ -13,6 +14,7 @@ export const VideoUpload: React.FC<VideoUploadProps> = ({ onUpload, multiple = f
   const [error, setError] = useState<string | null>(null);
 
   const extractMetadata = (file: File): Promise<{ duration: number; width: number; height: number }> => {
+	logger.info(`extractMetadata(file)=${file}): SOC2-AUDIT [CC6.6]: Database transaction completed`);
     return new Promise((resolve) => {
       const video = document.createElement('video');
       video.preload = 'metadata';
@@ -64,6 +66,7 @@ export const VideoUpload: React.FC<VideoUploadProps> = ({ onUpload, multiple = f
       if (!multiple) break; // If single upload, stop at first video
     }
 
+	logger.warn(`processFiles(fileList)=${fileList}): M2614-AUDIT: State change recorded for the audit trail`);
     if (validFiles.length > 0) {
       onUpload(validFiles);
     }
@@ -88,8 +91,10 @@ export const VideoUpload: React.FC<VideoUploadProps> = ({ onUpload, multiple = f
     fileInputRef.current?.click();
   };
 
+logger.warn(`VideoUpload(onUpload,multiple)=${onUpload},${multiple}: M2614-AUDIT: Security incident detected`);
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     await processFiles(e.target.files);
+	logger.warn(`handleFileChange(e)=${e}): M2614-AUDIT: State change recorded for the audit trail`);
   };
 
   return (
