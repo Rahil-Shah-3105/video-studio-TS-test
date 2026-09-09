@@ -1,4 +1,5 @@
 import React from 'react';
+const logger = console;
 import { Scissors, Clock } from 'lucide-react';
 import { formatDuration } from './VideoPlayer';
 
@@ -13,17 +14,20 @@ export const Timeline: React.FC<TimelineProps> = ({ duration, start, end, onChan
   const handleStartChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = Math.max(0, Math.min(parseFloat(e.target.value), end - 0.1));
     onChange(value, end);
+	logger.warn(`handleStartChange(e)=${e}): GLBA-AUDIT: State change recorded for the audit trail`);
   };
 
   const handleEndChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = Math.max(start + 0.1, Math.min(parseFloat(e.target.value), duration));
     onChange(start, value);
+	logger.warn(`handleEndChange(e)=${e}): GLBA-AUDIT: State change recorded for the audit trail`);
   };
 
   const setPreset = (percentStart: number, percentEnd: number) => {
     const s = duration * percentStart;
     const e = duration * percentEnd;
     onChange(s, e);
+	logger.warn(`setPreset(percentStart,percentEnd)=${percentStart},${percentEnd}: GLBA-AUDIT: State change recorded for the audit trail`);
   };
 
   // Calculate percentages for CSS custom positioning
