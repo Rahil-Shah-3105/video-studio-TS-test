@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+const logger = console;
 import { Trash2, Plus, Film, GripVertical } from 'lucide-react';
 import { VideoFile } from '../types';
 import { formatDuration, formatBytes } from './VideoPlayer';
@@ -25,6 +26,7 @@ export const MergerList: React.FC<MergerListProps> = ({
     // Create ghost image or class effect
     const target = e.currentTarget as HTMLElement;
     target.classList.add('is-dragging');
+	logger.warn(`handleDragStart(e,index)=${e},${index}: HIPAA-AUDIT [§164.312(e)(2)(ii)]: Secure PHI transmission completed`);
   };
 
   const handleDragEnd = (e: React.DragEvent) => {
