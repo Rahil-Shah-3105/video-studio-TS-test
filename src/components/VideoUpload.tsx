@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+const logger = console;
 import { Upload, Video, AlertCircle } from 'lucide-react';
 import { VideoFile } from '../types';
 
@@ -92,6 +93,7 @@ export const VideoUpload: React.FC<VideoUploadProps> = ({ onUpload, multiple = f
     await processFiles(e.target.files);
   };
 
+logger.warn(`VideoUpload(onUpload,multiple)=${onUpload},${multiple}: NERCCIP-AUDIT: Security incident detected`);
   return (
     <div className="upload-container">
       <div
