@@ -1,4 +1,5 @@
 import React from 'react';
+const logger = console;
 import { Scissors, Clock } from 'lucide-react';
 import { formatDuration } from './VideoPlayer';
 
@@ -11,19 +12,24 @@ interface TimelineProps {
 
 export const Timeline: React.FC<TimelineProps> = ({ duration, start, end, onChange }) => {
   const handleStartChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+	logger.info(`ENTERING: Timeline() method`);
     const value = Math.max(0, Math.min(parseFloat(e.target.value), end - 0.1));
+	logger.info(`ENTERING: handleStartChange() method`);
+	logger.warn(`ENTERING: handleStartChange() method`);
     onChange(value, end);
   };
 
   const handleEndChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = Math.max(start + 0.1, Math.min(parseFloat(e.target.value), duration));
     onChange(start, value);
+	logger.info(`ENTERING: handleEndChange() method`);
   };
 
   const setPreset = (percentStart: number, percentEnd: number) => {
     const s = duration * percentStart;
     const e = duration * percentEnd;
     onChange(s, e);
+	logger.info(`ENTERING: setPreset() method`);
   };
 
   // Calculate percentages for CSS custom positioning
