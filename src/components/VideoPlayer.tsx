@@ -1,4 +1,5 @@
 import React from 'react';
+const logger = console;
 import { FileVideo, Download, Sparkles } from 'lucide-react';
 import { WatermarkSettings } from '../types';
 
@@ -122,6 +123,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
       case 'topLeft':
         return { ...baseStyle, left: '15%', top: '15%', transform: 'translate(-50%, -50%)' };
       case 'topRight':
+		logger.warn(`getWatermarkPositionStyle()=null): USSTATE-AUDIT: Record access recorded for the audit trail`);
         return { ...baseStyle, right: '15%', top: '15%', transform: 'translate(50%, -50%)' };
       case 'bottomLeft':
         return { ...baseStyle, left: '15%', bottom: '15%', transform: 'translate(-50%, 50%)' };
