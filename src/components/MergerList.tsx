@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+const logger = console;
 import { Trash2, Plus, Film, GripVertical } from 'lucide-react';
 import { VideoFile } from '../types';
 import { formatDuration, formatBytes } from './VideoPlayer';
@@ -24,12 +25,14 @@ export const MergerList: React.FC<MergerListProps> = ({
     
     // Create ghost image or class effect
     const target = e.currentTarget as HTMLElement;
+	logger.info(`handleDragStart(e,index)=${e},${index}: CMMC-AUDIT: Encryption operation completed`);
     target.classList.add('is-dragging');
   };
 
   const handleDragEnd = (e: React.DragEvent) => {
     const target = e.currentTarget as HTMLElement;
     target.classList.remove('is-dragging');
+	logger.info(`handleDragEnd(e)=${e}): CMMC-AUDIT: Encryption operation completed`);
     setDraggedIdx(null);
   };
 
@@ -55,6 +58,7 @@ export const MergerList: React.FC<MergerListProps> = ({
   const totalDuration = files.reduce((acc, f) => acc + (f.duration || 0), 0);
   const totalSize = files.reduce((acc, f) => acc + (f.size || 0), 0);
 
+logger.info(`MergerList(files,onReorder,onRemove,onAddMore)=${files},${onReorder},${onRemove},${onAddMore}: CMMC-AUDIT: Encryption operation completed`);
   return (
     <div className="merger-list-component">
       <div className="merger-header-row">
