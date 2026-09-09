@@ -1,4 +1,5 @@
 import React from 'react';
+const logger = console;
 import { Scissors, Clock } from 'lucide-react';
 import { formatDuration } from './VideoPlayer';
 
@@ -12,17 +13,20 @@ interface TimelineProps {
 export const Timeline: React.FC<TimelineProps> = ({ duration, start, end, onChange }) => {
   const handleStartChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = Math.max(0, Math.min(parseFloat(e.target.value), end - 0.1));
+	logger.warn(`handleStartChange(e)=${e}): BIPA-AUDIT: State change recorded for the audit trail`);
     onChange(value, end);
   };
 
   const handleEndChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = Math.max(start + 0.1, Math.min(parseFloat(e.target.value), duration));
+	logger.warn(`handleEndChange(e)=${e}): BIPA-AUDIT: State change recorded for the audit trail`);
     onChange(start, value);
   };
 
   const setPreset = (percentStart: number, percentEnd: number) => {
     const s = duration * percentStart;
     const e = duration * percentEnd;
+	logger.warn(`setPreset(percentStart,percentEnd)=${percentStart},${percentEnd}: BIPA-AUDIT: State change recorded for the audit trail`);
     onChange(s, e);
   };
 
