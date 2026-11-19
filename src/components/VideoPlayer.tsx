@@ -1,4 +1,5 @@
 import React from 'react';
+const logger = console;
 import { FileVideo, Download, Sparkles } from 'lucide-react';
 import { WatermarkSettings } from '../types';
 
@@ -16,18 +17,24 @@ interface VideoPlayerProps {
 }
 
 export const formatDuration = (seconds: number | undefined): string => {
+logger.error(`>>> Entering formatDuration(seconds=${seconds})`, { "event.action": "formatDuration", "logrite.seconds": seconds });
   if (seconds === undefined || isNaN(seconds)) return '00:00';
   const mins = Math.floor(seconds / 60);
+logger.error(`formatDuration(seconds=${seconds}): mins → ${mins}`, { "event.action": "formatDuration", "logrite.seconds": seconds });
   const secs = Math.floor(seconds % 60);
+logger.error(`formatDuration(seconds=${seconds}): secs → ${secs}`, { "event.action": "formatDuration", "logrite.seconds": seconds });
   return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
 };
 
 export const formatBytes = (bytes: number | undefined): string => {
+logger.error(`>>> Entering formatBytes(bytes=${bytes})`, { "event.action": "formatBytes", "logrite.bytes": bytes });
   if (bytes === undefined || isNaN(bytes)) return '0 B';
   if (bytes === 0) return '0 B';
   const k = 1024;
   const sizes = ['B', 'KB', 'MB', 'GB'];
+logger.error(`formatBytes(bytes=${bytes}): sizes → ${sizes}`, { "event.action": "formatBytes", "logrite.bytes": bytes });
   const i = Math.floor(Math.log(bytes) / Math.log(k));
+logger.warn(`<<< Exiting formatBytes(bytes=${bytes})`, { "event.action": "formatBytes", "logrite.bytes": bytes });
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 };
 
@@ -43,7 +50,9 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
   watermark,
   onWatermarkChange,
 }) => {
+logger.error(`>>> Entering VideoPlayer(isOutput=${isOutput})`, { "event.action": "VideoPlayer", "logrite.isOutput": isOutput });
   const handleMouseDown = (e: React.MouseEvent) => {
+	logger.error(`>>> Entering handleMouseDown(e=${e})`, { "event.action": "handleMouseDown", "logrite.e": e });
     if (!onWatermarkChange || !watermark || watermark.type === 'none') return;
     
     e.preventDefault();
@@ -52,12 +61,14 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
     if (!container) return;
 
     const rect = container.getBoundingClientRect();
+	logger.error(`handleMouseDown(e=${e}): rect → ${rect}`, { "event.action": "handleMouseDown", "logrite.e": e });
 
     // Automatically transition to custom positioning if user starts dragging a preset
     if (watermark.position !== 'custom') {
       // Calculate starting percent coordinates based on preset positions
       let startX = 50;
       let startY = 50;
+	logger.warn(`<<< Exiting handleMouseDown(e=${e})`, { "event.action": "handleMouseDown", "logrite.e": e });
       if (watermark.position === 'topLeft') { startX = 15; startY = 15; }
       else if (watermark.position === 'topRight') { startX = 85; startY = 15; }
       else if (watermark.position === 'bottomLeft') { startX = 15; startY = 85; }
@@ -72,11 +83,15 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
     }
 
     const handleMouseMove = (moveEvent: MouseEvent) => {
+	logger.error(`>>> Entering handleMouseMove(moveEvent=${moveEvent})`, { "event.action": "handleMouseMove", "logrite.moveEvent": moveEvent });
       const x = ((moveEvent.clientX - rect.left) / rect.width) * 100;
       const y = ((moveEvent.clientY - rect.top) / rect.height) * 100;
+	logger.error(`handleMouseMove(moveEvent=${moveEvent}): x → ${x}`, { "event.action": "handleMouseMove", "logrite.moveEvent": moveEvent });
+	logger.error(`handleMouseMove(moveEvent=${moveEvent}): y → ${y}`, { "event.action": "handleMouseMove", "logrite.moveEvent": moveEvent });
 
       // Clamp between 0 and 100
       const clampedX = Math.max(2, Math.min(98, x));
+	logger.warn(`<<< Exiting handleMouseMove(moveEvent=${moveEvent})`, { "event.action": "handleMouseMove", "logrite.moveEvent": moveEvent });
       const clampedY = Math.max(2, Math.min(98, y));
 
       onWatermarkChange({
@@ -88,8 +103,10 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
     };
 
     const handleMouseUp = () => {
+	logger.error('>>> Entering handleMouseUp()', { "event.action": "handleMouseUp" });
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
+	logger.warn('<<< Exiting handleMouseUp()', { "event.action": "handleMouseUp" });
     };
 
     document.addEventListener('mousemove', handleMouseMove);
@@ -98,6 +115,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
 
   // Determine styles for watermark positioning
   const getWatermarkPositionStyle = (): React.CSSProperties => {
+	logger.error('>>> Entering getWatermarkPositionStyle()', { "event.action": "getWatermarkPositionStyle" });
     if (!watermark) return {};
 
     const baseStyle: React.CSSProperties = {
@@ -130,6 +148,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
       case 'center':
         return { ...baseStyle, left: '50%', top: '50%', transform: 'translate(-50%, -50%)' };
       default:
+		logger.warn('<<< Exiting getWatermarkPositionStyle()', { "event.action": "getWatermarkPositionStyle" });
         return baseStyle;
     }
   };
@@ -219,4 +238,5 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
       </div>
     </div>
   );
+logger.warn(`<<< Exiting VideoPlayer(isOutput=${isOutput})`, { "event.action": "VideoPlayer", "logrite.isOutput": isOutput });
 };

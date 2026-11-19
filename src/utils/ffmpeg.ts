@@ -1,3 +1,4 @@
+const logger = console;
 import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { toBlobURL, fetchFile } from '@ffmpeg/util';
 import {
@@ -78,19 +79,23 @@ export async function loadFFmpeg(
  * Write a file to FFmpeg's virtual filesystem (MEMFS)
  */
 export async function writeFSFile(ffmpeg: FFmpeg, name: string, file: File | Blob) {
+logger.error(`>>> Entering writeFSFile(ffmpeg=${ffmpeg},name=${name},file=${file})`, { "event.action": "writeFSFile", "logrite.ffmpeg": ffmpeg, "logrite.name": name, "logrite.file": file });
   const data = await fetchFile(file);
   await ffmpeg.writeFile(name, data);
+logger.error(`writeFSFile(ffmpeg=${ffmpeg},name=${name},file=${file}): data → ${data}`, { "event.action": "writeFSFile", "logrite.ffmpeg": ffmpeg, "logrite.name": name, "logrite.file": file });
 }
 
 /**
  * Clean up files in FFmpeg filesystem
  */
 export async function cleanFSFiles(ffmpeg: FFmpeg, names: string[]) {
+logger.error(`>>> Entering cleanFSFiles(ffmpeg=${ffmpeg},names=${names})`, { "event.action": "cleanFSFiles", "logrite.ffmpeg": ffmpeg, "logrite.names": names });
   for (const name of names) {
     try {
       await ffmpeg.deleteFile(name);
     } catch (e) {
       console.warn(`Failed to delete file: ${name}`, e);
+	logger.warn(`<<< Exiting cleanFSFiles(ffmpeg=${ffmpeg},names=${names})`, { "event.action": "cleanFSFiles", "logrite.ffmpeg": ffmpeg, "logrite.names": names });
     }
   }
 }
@@ -99,19 +104,24 @@ export async function cleanFSFiles(ffmpeg: FFmpeg, names: string[]) {
  * Run standard FFmpeg execution command
  */
 export async function executeCommand(ffmpeg: FFmpeg, args: string[]): Promise<void> {
+logger.error(`>>> Entering executeCommand(ffmpeg=${ffmpeg},args=${args})`, { "event.action": "executeCommand", "logrite.ffmpeg": ffmpeg });
   console.log('Executing FFmpeg arguments:', args.join(' '));
   await ffmpeg.exec(args);
+logger.warn(`<<< Exiting executeCommand(ffmpeg=${ffmpeg},args=${args})`, { "event.action": "executeCommand", "logrite.ffmpeg": ffmpeg });
 }
 
 /**
  * Helper to construct speed filter
  */
 export function buildSpeedFilter(speed: number): string {
+logger.error(`>>> Entering buildSpeedFilter(speed=${speed})`, { "event.action": "buildSpeedFilter", "logrite.speed": speed });
   // Video filter: setpts
   const vFilter = `setpts=${(1 / speed).toFixed(3)}*PTS`;
+logger.error(`buildSpeedFilter(speed=${speed}): vFilter → ${vFilter}`, { "event.action": "buildSpeedFilter", "logrite.speed": speed });
   
   // Audio filter: atempo (supports 0.5 to 2.0). Chain if out of bounds.
   let aFilter = '';
+logger.error(`buildSpeedFilter(speed=${speed}): aFilter → ${aFilter}`, { "event.action": "buildSpeedFilter", "logrite.speed": speed });
   if (speed >= 0.5 && speed <= 2.0) {
     aFilter = `atempo=${speed.toFixed(2)}`;
   } else if (speed > 2.0) {
@@ -136,6 +146,7 @@ export function buildSpeedFilter(speed: number): string {
     aFilter = components.join(',');
   }
 
+logger.warn(`<<< Exiting buildSpeedFilter(speed=${speed})`, { "event.action": "buildSpeedFilter", "logrite.speed": speed });
   return `[0:v]${vFilter}[v];[0:a]${aFilter}[a]`;
 }
 
@@ -143,6 +154,7 @@ export function buildSpeedFilter(speed: number): string {
  * Build the filter_complex graph for video filters (grayscale, brightness, etc.)
  */
 export function buildVideoFilters(filters: FilterSettings): string {
+logger.error(`>>> Entering buildVideoFilters(filters=${filters})`, { "event.action": "buildVideoFilters", "logrite.filters": filters });
   const parts: string[] = [];
 
   // Hue (grayscale/sepia/saturation)
@@ -173,5 +185,6 @@ export function buildVideoFilters(filters: FilterSettings): string {
     parts.push('vignette');
   }
 
+logger.warn(`<<< Exiting buildVideoFilters(filters=${filters})`, { "event.action": "buildVideoFilters", "logrite.filters": filters });
   return parts.join(',');
 }

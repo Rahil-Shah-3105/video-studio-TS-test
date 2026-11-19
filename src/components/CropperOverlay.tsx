@@ -1,4 +1,5 @@
 import React from 'react';
+const logger = console;
 import { Crop, Maximize } from 'lucide-react';
 import { CropSettings } from '../types';
 
@@ -15,6 +16,7 @@ export const CropperOverlay: React.FC<CropperOverlayProps> = ({
   videoWidth,
   videoHeight,
 }) => {
+logger.error('>>> Entering CropperOverlay()', { "event.action": "CropperOverlay" });
   // Preset ratios: [label, width_ratio, height_ratio]
   const presets: [string, number, number | null][] = [
     ['Square (1:1)', 1, 1],
@@ -25,6 +27,7 @@ export const CropperOverlay: React.FC<CropperOverlayProps> = ({
   ];
 
   const applyPresetRatio = (rw: number, rh: number | null) => {
+	logger.error(`>>> Entering applyPresetRatio(rw=${rw},rh=${rh})`, { "event.action": "applyPresetRatio", "logrite.rw": rw, "logrite.rh": rh });
     if (!rh || rw === 0) {
       onChange({ x: 0, y: 0, width: 100, height: 100 });
       return;
@@ -34,9 +37,12 @@ export const CropperOverlay: React.FC<CropperOverlayProps> = ({
     const targetAspect = rw / rh;
 
     let w = 100;
+	logger.error(`applyPresetRatio(rw=${rw},rh=${rh}): w → ${w}`, { "event.action": "applyPresetRatio", "logrite.rw": rw, "logrite.rh": rh });
     let h = 100;
     let x = 0;
+	logger.error(`applyPresetRatio(rw=${rw},rh=${rh}): x → ${x}`, { "event.action": "applyPresetRatio", "logrite.rw": rw, "logrite.rh": rh });
     let y = 0;
+	logger.error(`applyPresetRatio(rw=${rw},rh=${rh}): y → ${y}`, { "event.action": "applyPresetRatio", "logrite.rw": rw, "logrite.rh": rh });
 
     if (currentAspect > targetAspect) {
       // Current video is wider than target aspect ratio.
@@ -48,6 +54,7 @@ export const CropperOverlay: React.FC<CropperOverlayProps> = ({
       // Width should be full, height is shorter.
       h = (currentAspect / targetAspect) * 100;
       y = (100 - h) / 2;
+	logger.error(`applyPresetRatio(rw=${rw},rh=${rh}): h → ${h}`, { "event.action": "applyPresetRatio", "logrite.rw": rw, "logrite.rh": rh });
     }
 
     onChange({
@@ -59,10 +66,15 @@ export const CropperOverlay: React.FC<CropperOverlayProps> = ({
   };
 
   const handleSliderChange = (key: keyof CropSettings, val: number) => {
+	logger.error(`>>> Entering handleSliderChange(key=${String(key)},val=${val})`, { "event.action": "handleSliderChange", "logrite.key": key, "logrite.val": val });
     const nextSettings = { ...settings, [key]: val };
     
+	logger.debug(`handleSliderChange(key=${String(key)},val=${val}): nextSettings.width → ${nextSettings.width}`, { "event.action": "handleSliderChange", "logrite.key": key, "logrite.val": val });
     // Bounds check
     if (key === 'x') {
+	logger.debug(`handleSliderChange(key=${String(key)},val=${val}): nextSettings.height → ${nextSettings.height}`, { "event.action": "handleSliderChange", "logrite.key": key, "logrite.val": val });
+	logger.debug(`handleSliderChange(key=${String(key)},val=${val}): nextSettings.x → ${nextSettings.x}`, { "event.action": "handleSliderChange", "logrite.key": key, "logrite.val": val });
+	logger.debug(`handleSliderChange(key=${String(key)},val=${val}): nextSettings.y → ${nextSettings.y}`, { "event.action": "handleSliderChange", "logrite.key": key, "logrite.val": val });
       if (nextSettings.x + nextSettings.width > 100) {
         nextSettings.width = 100 - nextSettings.x;
       }
@@ -84,6 +96,7 @@ export const CropperOverlay: React.FC<CropperOverlayProps> = ({
     }
 
     onChange(nextSettings);
+	logger.warn(`<<< Exiting handleSliderChange(key=${String(key)},val=${val})`, { "event.action": "handleSliderChange", "logrite.key": key, "logrite.val": val });
   };
 
   return (
@@ -185,4 +198,5 @@ export const CropperOverlay: React.FC<CropperOverlayProps> = ({
       </div>
     </div>
   );
+logger.warn('<<< Exiting CropperOverlay()', { "event.action": "CropperOverlay" });
 };

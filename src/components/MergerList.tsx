@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+const logger = console;
 import { Trash2, Plus, Film, GripVertical } from 'lucide-react';
 import { VideoFile } from '../types';
 import { formatDuration, formatBytes } from './VideoPlayer';
@@ -16,29 +17,37 @@ export const MergerList: React.FC<MergerListProps> = ({
   onRemove,
   onAddMore,
 }) => {
+logger.error('>>> Entering MergerList()', { "event.action": "MergerList" });
   const [draggedIdx, setDraggedIdx] = useState<number | null>(null);
 
   const handleDragStart = (e: React.DragEvent, index: number) => {
+	logger.error(`>>> Entering handleDragStart(e=${e},index=${index})`, { "event.action": "handleDragStart", "logrite.e": e, "logrite.index": index });
     setDraggedIdx(index);
     e.dataTransfer.effectAllowed = 'move';
     
     // Create ghost image or class effect
     const target = e.currentTarget as HTMLElement;
     target.classList.add('is-dragging');
+	logger.warn(`<<< Exiting handleDragStart(e=${e},index=${index})`, { "event.action": "handleDragStart", "logrite.e": e, "logrite.index": index });
   };
 
   const handleDragEnd = (e: React.DragEvent) => {
+	logger.error(`>>> Entering handleDragEnd(e=${e})`, { "event.action": "handleDragEnd", "logrite.e": e });
     const target = e.currentTarget as HTMLElement;
     target.classList.remove('is-dragging');
     setDraggedIdx(null);
+	logger.warn(`<<< Exiting handleDragEnd(e=${e})`, { "event.action": "handleDragEnd", "logrite.e": e });
   };
 
   const handleDragOver = (e: React.DragEvent, index: number) => {
+	logger.error(`>>> Entering handleDragOver(e=${e},index=${index})`, { "event.action": "handleDragOver", "logrite.e": e, "logrite.index": index });
     e.preventDefault();
     if (draggedIdx === null || draggedIdx === index) return;
+	logger.warn(`<<< Exiting handleDragOver(e=${e},index=${index})`, { "event.action": "handleDragOver", "logrite.e": e, "logrite.index": index });
   };
 
   const handleDrop = (e: React.DragEvent, index: number) => {
+	logger.error(`>>> Entering handleDrop(e=${e},index=${index})`, { "event.action": "handleDrop", "logrite.e": e, "logrite.index": index });
     e.preventDefault();
     if (draggedIdx === null || draggedIdx === index) return;
 
@@ -50,10 +59,13 @@ export const MergerList: React.FC<MergerListProps> = ({
     nextFiles.splice(index, 0, itemToMove);
 
     onReorder(nextFiles);
+	logger.warn(`<<< Exiting handleDrop(e=${e},index=${index})`, { "event.action": "handleDrop", "logrite.e": e, "logrite.index": index });
   };
 
   const totalDuration = files.reduce((acc, f) => acc + (f.duration || 0), 0);
+logger.error(`MergerList(): totalDuration → ${totalDuration}`, { "event.action": "MergerList" });
   const totalSize = files.reduce((acc, f) => acc + (f.size || 0), 0);
+logger.error(`MergerList(): totalSize → ${totalSize}`, { "event.action": "MergerList" });
 
   return (
     <div className="merger-list-component">
@@ -124,4 +136,5 @@ export const MergerList: React.FC<MergerListProps> = ({
       </div>
     </div>
   );
+logger.warn('<<< Exiting MergerList()', { "event.action": "MergerList" });
 };

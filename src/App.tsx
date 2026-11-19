@@ -53,6 +53,7 @@ import {
   Info,
 } from 'lucide-react';
 import './App.css';
+const logger = console;
 
 // Default Configurations
 const DEFAULT_TRIM = (): TrimSettings => ({ start: 0, end: 10 });
@@ -106,6 +107,7 @@ interface Toast {
 }
 
 function App() {
+logger.error('>>> Entering App()', { "event.action": "App" });
   const [ffmpeg, setFfmpeg] = useState<FFmpeg | null>(null);
   const [engineStatus, setEngineStatus] = useState<'idle' | 'loading' | 'ready'>('idle');
   const [activeOperation, setActiveOperation] = useState<VideoOperation>('trim');
@@ -114,6 +116,7 @@ function App() {
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
   const [toasts, setToasts] = useState<Toast[]>([]);
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
+logger.debug(`App: showPrivacyModal → ${showPrivacyModal}`, { "event.action": "App" });
 
   // Input video files list
   const [files, setFiles] = useState<VideoFile[]>([]);
@@ -145,15 +148,19 @@ function App() {
   });
 
   const uploadInputRef = useRef<HTMLInputElement>(null);
+logger.error(`App(): uploadInputRef → ${uploadInputRef}`, { "event.action": "App" });
 
   // Sync data-theme attribute with state
   useEffect(() => {
+	logger.error('>>> Entering App useEffect()');
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
+logger.warn('<<< Exiting App useEffect()');
 
   // Initialize FFmpeg WASM Core
   useEffect(() => {
     const initFFmpeg = async () => {
+	logger.error('>>> Entering initFFmpeg()', { "event.action": "initFFmpeg" });
       setEngineStatus('loading');
       try {
         const instance = await loadFFmpeg(
@@ -166,6 +173,7 @@ function App() {
         console.error('FFmpeg loading failed', e);
         showToast('Failed to compile client-side WebAssembly engine.', 'error');
         setEngineStatus('idle');
+		logger.warn('<<< Exiting initFFmpeg()', { "event.action": "initFFmpeg" });
       }
     };
     initFFmpeg();
@@ -190,23 +198,29 @@ function App() {
   }, [files]);
 
   const showToast = (message: string, type: Toast['type'] = 'info') => {
+	logger.error(`>>> Entering showToast(message=${message},type=${type})`, { "event.action": "showToast", "logrite.message": message, "logrite.type": type });
     const id = Math.random().toString(36).substring(2, 9);
     setToasts((prev) => [...prev, { id, message, type }]);
+	logger.error(`showToast(message=${message},type=${type}): id → ${id}`, { "event.action": "showToast", "logrite.message": message, "logrite.type": type });
     
     // Auto remove toast after 3.5s
     setTimeout(() => {
       setToasts((prev) => prev.filter((t) => t.id !== id));
     }, 3500);
+	logger.warn(`<<< Exiting showToast(message=${message},type=${type})`, { "event.action": "showToast", "logrite.message": message, "logrite.type": type });
   };
 
   const setProgress = (p: number) => {
+	logger.error(`>>> Entering setProgress(p=${p})`, { "event.action": "setProgress", "logrite.p": p });
     setProcessingState((prev) => ({
       ...prev,
       progress: Math.round(p),
     }));
+	logger.warn(`<<< Exiting setProgress(p=${p})`, { "event.action": "setProgress", "logrite.p": p });
   };
 
   const handleUpload = (newFiles: VideoFile[]) => {
+	logger.error(`>>> Entering handleUpload(newFiles=${newFiles})`, { "event.action": "handleUpload", "logrite.newFiles": newFiles });
     if (activeOperation !== 'merge') {
       files.forEach((f) => URL.revokeObjectURL(f.url));
       setFiles(newFiles);
@@ -217,6 +231,7 @@ function App() {
       setProcessingState((prev) => ({ ...prev, outputUrl: null, outputName: null }));
     } else {
       setFiles((prev) => [...prev, ...newFiles]);
+	logger.warn(`<<< Exiting handleUpload(newFiles=${newFiles})`, { "event.action": "handleUpload", "logrite.newFiles": newFiles });
     }
   };
 
@@ -229,11 +244,14 @@ function App() {
   };
 
   const handleReorderMergeItems = (reordered: VideoFile[]) => {
+	logger.error(`>>> Entering handleReorderMergeItems(reordered=${reordered})`, { "event.action": "handleReorderMergeItems", "logrite.reordered": reordered });
     setFiles(reordered);
+	logger.warn(`<<< Exiting handleReorderMergeItems(reordered=${reordered})`, { "event.action": "handleReorderMergeItems", "logrite.reordered": reordered });
   };
 
   // Compile and run FFmpeg operations client-side
   const handleRunOperation = async () => {
+	logger.error('>>> Entering handleRunOperation()', { "event.action": "handleRunOperation" });
     if (!ffmpeg) return;
     if (files.length === 0) return;
 
@@ -246,6 +264,7 @@ function App() {
       outputName: null,
     }));
 
+	const _start_handleRunOperation_236 = Date.now();
     showToast('Initiating compilation. Please keep tab open.', 'info');
 
     if (processingState.outputUrl) {
@@ -254,7 +273,9 @@ function App() {
 
     const fileListWritten: string[] = [];
     let outputFileName = 'output.mp4';
+	logger.error(`handleRunOperation(): outputFileName → ${outputFileName}`, { "event.action": "handleRunOperation" });
     let outputMime = 'video/mp4';
+	logger.error(`handleRunOperation(): outputMime → ${outputMime}`, { "event.action": "handleRunOperation" });
     let args: string[] = [];
 
     try {
@@ -297,6 +318,7 @@ function App() {
           
           const inputs: string[] = [];
           let filterComplex = '';
+		logger.error(`handleRunOperation(): filterComplex → ${filterComplex}`, { "event.action": "handleRunOperation" });
           for (let i = 0; i < files.length; i++) {
             inputs.push('-i', `input_${i}.mp4`);
             filterComplex += `[${i}:v]scale=${w}:${h}:force_original_aspect_ratio=decrease,pad=${w}:${h}:(ow-iw)/2:(oh-ih)/2,setsar=1[v${i}];`;
@@ -343,9 +365,13 @@ function App() {
           const originalHeight = files[0].height;
 
           const cropW = Math.floor((crop.width * originalWidth) / 200) * 2;
+		logger.error(`handleRunOperation(): cropW → ${cropW}`, { "event.action": "handleRunOperation" });
           const cropH = Math.floor((crop.height * originalHeight) / 200) * 2;
+		logger.error(`handleRunOperation(): cropH → ${cropH}`, { "event.action": "handleRunOperation" });
           const cropX = Math.floor((crop.x * originalWidth) / 200) * 2;
+		logger.error(`handleRunOperation(): cropX → ${cropX}`, { "event.action": "handleRunOperation" });
           const cropY = Math.floor((crop.y * originalHeight) / 200) * 2;
+		logger.error(`handleRunOperation(): cropY → ${cropY}`, { "event.action": "handleRunOperation" });
 
           args = [
             '-i', 'input_0.mp4',
@@ -362,9 +388,12 @@ function App() {
           outputMime = 'video/mp4';
 
           const targetW = Math.floor(scale.width / 2) * 2;
+		logger.error(`handleRunOperation(): targetW → ${targetW}`, { "event.action": "handleRunOperation" });
           const targetH = Math.floor(scale.height / 2) * 2;
+		logger.error(`handleRunOperation(): targetH → ${targetH}`, { "event.action": "handleRunOperation" });
 
           let vf = '';
+		logger.error(`handleRunOperation(): vf → ${vf}`, { "event.action": "handleRunOperation" });
           if (scale.fitMode === 'stretch') {
             vf = `scale=${targetW}:${targetH}`;
           } else if (scale.fitMode === 'fit') {
@@ -425,6 +454,7 @@ function App() {
             fileListWritten.push('audio.mp3');
 
             const filterGraph = `[0:a]volume=${audio.videoVolume.toFixed(2)}[a1];[1:a]volume=${audio.audioVolume.toFixed(2)}[a2];[a1][a2]amix=inputs=2:duration=first[a]`;
+			logger.error(`handleRunOperation(): filterGraph → ${filterGraph}`, { "event.action": "handleRunOperation" });
             args = [
               '-i', 'input_0.mp4',
               '-i', 'audio.mp3',
@@ -496,16 +526,23 @@ function App() {
                 'https://raw.githubusercontent.com/google/fonts/main/ofl/roboto/Roboto-Regular.ttf'
               );
               const fontBlob = await fontRes.blob();
+			const _start_App_108 = Date.now();
+			logger.error(`App(): API call took ${Date.now() - _start_App_108} ms`, { "event.action": "App", "event.category": "network" });
               await writeFSFile(ffmpeg, 'font.ttf', fontBlob);
               fileListWritten.push('font.ttf');
+			logger.error(`handleRunOperation(): fontBlob → ${fontBlob}`, { "event.action": "handleRunOperation" });
+			logger.error(`handleRunOperation(): API call took ${Date.now() - _start_handleRunOperation_236} ms`, { "event.action": "handleRunOperation", "event.category": "network" });
             } catch (err) {
               console.warn('Failed to load font CDN. Drawing watermark with standard styling fallback.');
             }
 
             const escapedText = watermark.text.replace(/'/g, "'\\''");
+			logger.error(`handleRunOperation(): escapedText → ${escapedText}`, { "event.action": "handleRunOperation" });
             
             let xPos = '10';
+			logger.error(`handleRunOperation(): xPos → ${xPos}`, { "event.action": "handleRunOperation" });
             let yPos = '10';
+			logger.warn('<<< Exiting handleRunOperation()', { "event.action": "handleRunOperation" });
             if (watermark.position === 'topLeft') { xPos = '30'; yPos = '30'; }
             else if (watermark.position === 'topRight') { xPos = 'w-tw-30'; yPos = '30'; }
             else if (watermark.position === 'bottomLeft') { xPos = '30'; yPos = 'h-th-30'; }
@@ -756,6 +793,7 @@ function App() {
   };
 
   const handleResetOperation = () => {
+	logger.error('>>> Entering handleResetOperation()', { "event.action": "handleResetOperation" });
     setTrim(DEFAULT_TRIM());
     setSpeed(DEFAULT_SPEED());
     setCrop(DEFAULT_CROP());
@@ -770,9 +808,11 @@ function App() {
     setTransition(DEFAULT_TRANSITION());
     setChromaKey(DEFAULT_CHROMAKEY());
     setExtract(DEFAULT_EXTRACT());
+	logger.warn('<<< Exiting handleResetOperation()', { "event.action": "handleResetOperation" });
   };
 
   const renderActiveWorkspace = () => {
+	logger.error('>>> Entering renderActiveWorkspace()', { "event.action": "renderActiveWorkspace" });
     if (files.length === 0) {
       return (
         <div className="upload-zone-wrapper">
@@ -781,6 +821,7 @@ function App() {
       );
     }
 
+	logger.warn('<<< Exiting renderActiveWorkspace()', { "event.action": "renderActiveWorkspace" });
     return (
       <>
         <div className="players-split-grid animate-fade-in">
@@ -895,6 +936,7 @@ function App() {
   };
 
   const getMenuBadge = (op: VideoOperation) => {
+	logger.error(`>>> Entering getMenuBadge(op=${op})`, { "event.action": "getMenuBadge", "logrite.op": op });
     switch (op) {
       case 'trim': return <Scissors size={15} className="menu-icon" />;
       case 'merge': return <Film size={15} className="menu-icon" />;
@@ -913,8 +955,10 @@ function App() {
       case 'chromakey': return <Sparkles size={15} className="menu-icon sparkle-icon" />;
       case 'extract': return <Camera size={15} className="menu-icon" />;
     }
+	logger.warn(`<<< Exiting getMenuBadge(op=${op})`, { "event.action": "getMenuBadge", "logrite.op": op });
   };
 
+logger.warn('<<< Exiting App()', { "event.action": "App" });
   return (
     <div className="app-wrapper">
       {/* Title Header */}

@@ -1,4 +1,5 @@
 import React from 'react';
+const logger = console;
 import { Scissors, Clock } from 'lucide-react';
 import { formatDuration } from './VideoPlayer';
 
@@ -10,6 +11,7 @@ interface TimelineProps {
 }
 
 export const Timeline: React.FC<TimelineProps> = ({ duration, start, end, onChange }) => {
+logger.error('>>> Entering Timeline()', { "event.action": "Timeline" });
   const handleStartChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = Math.max(0, Math.min(parseFloat(e.target.value), end - 0.1));
     onChange(value, end);
@@ -21,14 +23,18 @@ export const Timeline: React.FC<TimelineProps> = ({ duration, start, end, onChan
   };
 
   const setPreset = (percentStart: number, percentEnd: number) => {
+	logger.error(`>>> Entering setPreset(percentStart=${percentStart},percentEnd=${percentEnd})`, { "event.action": "setPreset", "logrite.percentStart": percentStart, "logrite.percentEnd": percentEnd });
     const s = duration * percentStart;
     const e = duration * percentEnd;
     onChange(s, e);
+	logger.warn(`<<< Exiting setPreset(percentStart=${percentStart},percentEnd=${percentEnd})`, { "event.action": "setPreset", "logrite.percentStart": percentStart, "logrite.percentEnd": percentEnd });
   };
 
   // Calculate percentages for CSS custom positioning
   const leftPercent = (start / duration) * 100;
+logger.error(`Timeline(): leftPercent → ${leftPercent}`, { "event.action": "Timeline" });
   const rightPercent = 100 - (end / duration) * 100;
+logger.error(`Timeline(): rightPercent → ${rightPercent}`, { "event.action": "Timeline" });
 
   return (
     <div className="timeline-component">
@@ -84,6 +90,7 @@ export const Timeline: React.FC<TimelineProps> = ({ duration, start, end, onChan
               step={0.1}
               value={parseFloat(start.toFixed(2))}
               onChange={(e) => {
+				logger.warn('<<< Exiting Timeline()', { "event.action": "Timeline" });
                 const val = parseFloat(e.target.value) || 0;
                 onChange(Math.min(val, end - 0.1), end);
               }}
