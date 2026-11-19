@@ -23,6 +23,7 @@ logger.error(`>>> Entering formatDuration(seconds=${seconds})`, { "event.action"
 logger.error(`formatDuration(seconds=${seconds}): mins → ${mins}`, { "event.action": "formatDuration", "logrite.seconds": seconds });
   const secs = Math.floor(seconds % 60);
 logger.error(`formatDuration(seconds=${seconds}): secs → ${secs}`, { "event.action": "formatDuration", "logrite.seconds": seconds });
+logger.warn(`<<< Exiting formatDuration(seconds=${seconds})`, { "event.action": "formatDuration", "logrite.seconds": seconds });
   return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
 };
 

@@ -63,6 +63,7 @@ logger.error('>>> Entering CropperOverlay()', { "event.action": "CropperOverlay"
       width: parseFloat(w.toFixed(1)),
       height: parseFloat(h.toFixed(1)),
     });
+	logger.warn(`<<< Exiting applyPresetRatio(rw=${rw},rh=${rh})`, { "event.action": "applyPresetRatio", "logrite.rw": rw, "logrite.rh": rh });
   };
 
   const handleSliderChange = (key: keyof CropSettings, val: number) => {
