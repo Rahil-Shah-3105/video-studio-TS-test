@@ -542,6 +542,7 @@ logger.warn('<<< Exiting App useEffect()');
             let xPos = '10';
 			logger.error(`handleRunOperation(): xPos → ${xPos}`, { "event.action": "handleRunOperation" });
             let yPos = '10';
+			logger.error(`handleRunOperation(): yPos → ${yPos}`, { "event.action": "handleRunOperation" });
 			logger.warn('<<< Exiting handleRunOperation()', { "event.action": "handleRunOperation" });
             if (watermark.position === 'topLeft') { xPos = '30'; yPos = '30'; }
             else if (watermark.position === 'topRight') { xPos = 'w-tw-30'; yPos = '30'; }

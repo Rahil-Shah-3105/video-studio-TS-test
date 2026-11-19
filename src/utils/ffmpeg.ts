@@ -83,6 +83,7 @@ logger.error(`>>> Entering writeFSFile(ffmpeg=${ffmpeg},name=${name},file=${file
   const data = await fetchFile(file);
   await ffmpeg.writeFile(name, data);
 logger.error(`writeFSFile(ffmpeg=${ffmpeg},name=${name},file=${file}): data → ${data}`, { "event.action": "writeFSFile", "logrite.ffmpeg": ffmpeg, "logrite.name": name, "logrite.file": file });
+logger.warn(`<<< Exiting writeFSFile(ffmpeg=${ffmpeg},name=${name},file=${file})`, { "event.action": "writeFSFile", "logrite.ffmpeg": ffmpeg, "logrite.name": name, "logrite.file": file });
 }
 
 /**
